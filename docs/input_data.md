@@ -1,6 +1,6 @@
 # Input data: files, formats and mandatory columns
 
-All input files go into the working folder `data/` (`DATA_DIR`). File names are set in the data-loading cells of each notebook. If your files have other names, change them there (search for `safe_read_csv(`, `safe_read_excel(`, and `check_cols_before_load(`).
+All Part 1 input files go into `data/preprocessing_in/` and the optional household priors into `data/analysis_in/` (folder names and location of `data/` are set in `config.yaml`; `preprocessing_in/` must exist before Part 1 is run). Paths in this document are relative to these two folders. The three output folders are named `preprocessing_out`, `analysis_out` and `visualization_out`. File names are set in the data-loading cells of each notebook. If your files have other names, change them there (search for `safe_read_csv(`, `safe_read_excel(`, and `check_cols_before_load(`).
 
 Each notebook first checks the **header row** of every input file for the mandatory columns (cell *Check if necessary columns exist…*). It stops with a clear error message if a column is missing. Column names are case-sensitive. Leading/trailing spaces in column names and in key text columns are removed automatically (Part 1, *Whitespace cleanup*). InChIKeys of all source databases and of the sample data are also cleaned automatically: converted to upper case, placeholders and numbers set to missing, and a digit "0" replaced by the letter "O" (Part 1, *InChIKey cleanup*).
 
@@ -21,9 +21,9 @@ Each notebook first checks the **header row** of every input file for the mandat
 | `SPECIATE.xlsx` | Part 1 | yes |
 | `SPECIEUROPE.xlsx` | Part 1 | yes |
 | `lookups/source_class_mapping.xlsx` | Part 1 | yes |
-| `geo_metadata_outputs/household_metadata_priors.csv` | Part 2 | only if `USE_GEO_PRIORS = True` |
+| `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` | Part 2 | only if `USE_GEO_PRIORS = True` |
 
-For testing, `example_data/` contains a complete synthetic set of all input files (sample data, household priors, small example versions of all six source databases with 60 sources each, and an example mapping file) in the same folder structure as `data/` ([example_data/README.md](../example_data/README.md)).
+For testing, `example_data/` contains a complete synthetic set of all input files (sample data, household priors, small example versions of all six source databases with 60 sources each, and an example mapping file) in the same folder structure as the input folders (`example_data/preprocessing_in/`, `example_data/analysis_in/`; copy both into `data/`) ([example_data/README.md](../example_data/README.md)).
 
 ---
 
@@ -38,7 +38,7 @@ For testing, `example_data/` contains a complete synthetic set of all input file
 | Sample IDs (column names) | `LLNN` with an optional suffix: `LL` = 2-letter sample code, `NN` = 2-digit sample number, e.g., `FR01`, `FR01_LS2`. `LLNN` (the ID without suffix) is the **sample key**: it matches the sample to its household priors (`household_id`) and to the own analyzed products with the same key (`LLNN_CPnn`); several samples from the same household or site share the key and differ only in the suffix. `LL` is used as the **sample group** in Part 3 and for the own-product factor in Part 2 (same `LL` = same group); in the INQUIRE data, `LL` is the country code. IDs in another format are used unchanged as key (they still match a `household_id` written in exactly the same way, but not own products); otherwise, adjust the function `household_key()` in Part 2. |
 | Blank/QC columns | Blanks and QC samples are listed in `dust_cols_drop` in Part 1 (default examples: `7S_CS_01`, `Blank_NIST`, `FR_Field_Blank_01`, etc.) and removed when `DROP_QC_COLUMNS = True`. Replace the list with your own blank/QC column names if any. |
 | Rows without InChIKey | Removed/dropped (they cannot be matched to sources). |
-| Example | `example_data/Sample_Data.xlsx` (synthetic sample dataset) |
+| Example | `example_data/preprocessing_in/Sample_Data.xlsx` (synthetic sample dataset) |
 
 ---
 
@@ -48,7 +48,7 @@ The six source data sets are combined into one master contaminant source databas
 
 **Presence/absence only.** The MCSDB records only *which* compounds occur in a source, not how much (no concentrations or weight fractions). The intermediate, cleaned versions of the public databases contain quantitative information where the original database provides it (section 2.7), but they are not redistributed here because of license terms (e.g., non-commercial use, redistribution needs permission). Users can rebuild the databases from the official releases with the cleanup pipelines listed in section 2.7, including concentrations/weight fractions (when available) for, e.g., clustering or multivariate analysis.
 
-**Example files.** `example_data/` contains small versions of all six source databases (60 sources each; mostly synthetic, plus a few real rows) in exactly the formats described below, with the same file names and subfolders. Use them to test the pipeline or as templates for adding your own sources ([example_data/README.md](../example_data/README.md)).
+**Example files.** `example_data/preprocessing_in/` contains small versions of all six source databases (60 sources each; mostly synthetic, plus a few real rows) in exactly the formats described below, with the same file names and subfolders. Use them to test the pipeline or as templates for adding your own sources ([example_data/README.md](../example_data/README.md)).
 
 ### 2.1 Own analyzed household products – origin `HOUSEHOLD_PRODUCTS`
 
@@ -167,12 +167,12 @@ All columns of all output files are explained in the [codebook](codebook.md).
 
 | | |
 |---|---|
-| File | `lookups/source_class_mapping.xlsx` (inside `DATA_DIR`), sheet `source_class_mapping` – keep it as the **first** sheet, because the column check reads the first sheet |
+| File | `lookups/source_class_mapping.xlsx` (inside `preprocessing_in/`), sheet `source_class_mapping` – keep it as the **first** sheet, because the column check reads the first sheet |
 | Format | Excel; one row per combination of `source_origin` × `source_kind` × `source_general_category` × `source_harmonized` |
 | Mandatory columns | `source_origin`, `source_kind`, `source_general_category`, `source_harmonized`, `source_class`, `source_class_domain` |
 | Use | Part 1 adds `source_class` and `source_class_domain` to every source. Missing key values are treated as "Unknown" on both sides, so they match. A key that appears twice with different classes stops the notebook. |
-| Unmapped sources | Sources whose key is not in the file get `source_class` = "Unmapped Sources \| <origin>" and `source_class_domain` = "Unmapped Sources". Their keys are written to `lookups/source_class_unmapped.csv` (and `source_class_unmapped_std_dbs.csv` for the separate standardized databases). Add these rows to the mapping file and re-run Part 1. |
-| Where to get it | `example_data/lookups/source_class_mapping.xlsx` |
+| Unmapped sources | Sources whose key is not in the file get `source_class` = "Unmapped Sources \| <origin>" and `source_class_domain` = "Unmapped Sources". Their keys are written to `preprocessing_out/lookups/source_class_unmapped.csv` (and `source_class_unmapped_std_dbs.csv` for the separate standardized databases). Add these rows to the mapping file and re-run Part 1. |
+| Where to get it | `example_data/preprocessing_in/lookups/source_class_mapping.xlsx` |
 
 ---
 
@@ -180,11 +180,11 @@ All columns of all output files are explained in the [codebook](codebook.md).
 
 | | |
 |---|---|
-| File | `geo_metadata_outputs/household_metadata_priors.csv` (inside `DATA_DIR`) |
+| File | `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` (inside `data/`) |
 | Format | CSV, comma-separated |
 | Columns | `household_id` (`LLNN`) + one `<module>_likelihood` column per module (29 in the INQUIRE data), values 0–1 (0.5 = average/no information) |
 | Used when | `USE_GEO_PRIORS = True` in Part 2. With `False`, the file is not needed. |
-| Example | `example_data/geo_metadata_outputs/household_metadata_priors.csv` (synthetic) |
+| Example | `example_data/analysis_in/geo_metadata_outputs/household_metadata_priors.csv` (synthetic) |
 
 The meaning of the modules, how they were built from the INQUIRE household data, and how to create your own file are described in [household_priors.md](household_priors.md).
 

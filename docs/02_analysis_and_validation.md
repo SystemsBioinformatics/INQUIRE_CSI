@@ -10,19 +10,21 @@ The model is explained in [method_and_limitations.md](method_and_limitations.md)
 
 ## Inputs
 
+Part 1 files are read from `data/preprocessing_out/`, the optional priors from `data/analysis_in/` (folder names set in `config.yaml`).
+
 | File | From | Content |
 |---|---|---|
-| `databases_standardized/sources_meta_standardized.csv` | Part 1 | Names, categories and reporting classes of all sources |
-| `databases_standardized/dust_standardized.csv` | Part 1 | Sample table (used for compound names) |
-| `masked_sources/sources_masked.csv` | Part 1 | Final source database (source × compound) |
-| `masked_sources/sample_universes.csv` | Part 1 | InChIKeys detected per sample |
-| `geo_metadata_outputs/household_metadata_priors.csv` | optional, user-provided ([household_priors.md](household_priors.md)) | Household likelihoods per module; only read if `USE_GEO_PRIORS = True` |
+| `preprocessing_out/databases_standardized/sources_meta_standardized.csv` | Part 1 | Names, categories and reporting classes of all sources |
+| `preprocessing_out/databases_standardized/dust_standardized.csv` | Part 1 | Sample table (used for compound names) |
+| `preprocessing_out/masked_sources/sources_masked.csv` | Part 1 | Final source database (source × compound) |
+| `preprocessing_out/masked_sources/sample_universes.csv` | Part 1 | InChIKeys detected per sample |
+| `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` | optional, user-provided ([household_priors.md](household_priors.md)) | Household likelihoods per module; only read if `USE_GEO_PRIORS = True` |
 
 Mandatory columns are checked at the start: `source_id, source_name, source_origin, source_kind, source_general_category, source_harmonized, source_class, source_class_domain, inchikey`, `Feature Name`, and `household_id` if `USE_GEO_PRIORS = True`.
 
 ## Outputs
 
-Main results (folder `set_cover_outputs/`):
+All outputs are written to `data/analysis_out/`. Main results (folder `analysis_out/set_cover_outputs/`):
 
 | File | Content |
 |---|---|
@@ -32,7 +34,7 @@ Main results (folder `set_cover_outputs/`):
 | `source_posterior_all_samples_beam.csv` | Per sample × source: inclusion probability and share of the explanation |
 | `compound_attribution_per_origin.csv` | Per sample: share of attributed compounds per source database (origin) in the best cover |
 
-Validation and diagnostics: `alpha_tuning/`, `validation_outputs/`, `lookups/`, `geo_metadata_outputs/geo_mapping_check.csv`. See the [codebook](codebook.md) for every file and column.
+Validation and diagnostics (in `analysis_out/`): `alpha_tuning/`, `validation_outputs/`, `lookups/`, `geo_check/geo_mapping_check.csv`. See the [codebook](codebook.md) for every file and column.
 
 ## Runtime
 
@@ -46,7 +48,7 @@ About 5 hours for ~200 samples on the test laptop (INQUIRE reference run: 05:02:
 
 **A1. Title; reset environment; imports & setup.** As in Part 1; log file `inquire_csi_pt2_analysis_and_validation_log_<yymmdd>.log`; `GLOBAL_SEED = 1`.
 
-**A2. Check columns.** Sets `DATA_DIR` (stops if the folder does not exist), the switch `USE_GEO_PRIORS` and the subfolders (`STD_DIR`, `MASK_DIR`, `GEO_DIR`, `ALF_DIR`, `VAL_DIR`, `OUT_DIR`), and checks the mandatory columns.
+**A2. Check columns.** Reads `config.yaml` and sets `DATA_DIR`, `PREP_OUT_DIR`, `AN_IN_DIR` and `AN_OUT_DIR` (stops if the working folder or `preprocessing_out` does not exist), the switch `USE_GEO_PRIORS` and the subfolders (`STD_DIR`, `MASK_DIR`, `GEO_DIR`, `GEO_CHECK_DIR`, `ALF_DIR`, `VAL_DIR`, `OUT_DIR`), and checks the mandatory columns.
 
 **A3. Load inputs; load household metadata priors.** Loads the four Part 1 files. If `USE_GEO_PRIORS = True`, loads `household_metadata_priors.csv` and builds a lookup per household; otherwise the lookup stays empty and no household information is used. Sample IDs follow the pattern `LLNN[_suffix]` (`LL` = 2-letter sample code, `NN` = 2-digit sample number, `[_suffix]` is not mandatory, e.g., `FR01`, `FR01_LS2`); the function `household_key()` reduces every sample ID and `household_id` to the key `LLNN` (e.g., `FR01_LS2` → `FR01`) so that they match. IDs in another format are used unchanged (upper case). Warns if IDs in the priors file are not in the `LLNN` format or appear twice.
 
@@ -141,7 +143,7 @@ Metrics: **compound precision** = share of the compounds of the selected sources
 
 **F6. Compound attribution per origin.** For the best cover, each attributed compound is assigned to the highest-priority origin (by `SOURCE_WEIGHT`) among the selected sources that contain it; gives the share of compounds per database per sample (`compound_attribution_per_origin.csv`).
 
-**F7. Final checks.** Writes `validation_outputs/final_checks_per_sample.csv` and logs: whether all own-product IDs are readable; for samples from households with analyzed products, how many own products were candidates and how many are in the best cover; how often the best cover equals the greedy cover; number of covers per sample; whether any blank/QC column was analyzed as a sample (must be none); median share of unattributed compounds.
+**F7. Final checks.** Writes `analysis_out/validation_outputs/final_checks_per_sample.csv` and logs: whether all own-product IDs are readable; for samples from households with analyzed products, how many own products were candidates and how many are in the best cover; how often the best cover equals the greedy cover; number of covers per sample; whether any blank/QC column was analyzed as a sample (must be none); median share of unattributed compounds.
 
 **F8. Own household products in detail (optional).** For each sample whose household has analyzed products: how many of the sample compounds that occur in its own products are explained by those products, which origin explains the rest, and which household factors were applied (`validation_outputs/own_household_products_check.csv`).
 
@@ -159,7 +161,7 @@ The validation blocks (section E) take several hours and are not needed for the 
 
 | Parameter | Cell | Default | Meaning | When to change |
 |---|---|---|---|---|
-| `DATA_DIR` | Check columns | `../data` | Working folder (same as Part 1) | Different folder structure |
+| `config.yaml` (`data_dir`, `folders`) | Check columns | `data`; `preprocessing_out`, `analysis_in`, `analysis_out` | Working folder and folder names (shared with Parts 1 and 3) | Edit `config.yaml`, not the notebook |
 | `USE_GEO_PRIORS` | Check columns | `True` | `True`: use `household_metadata_priors.csv`; `False`: no household information (geo multiplier = 1.0) | No household data available |
 | `GLOBAL_SEED` | Imports & setup | 1 | Seed for alpha tuning | Robustness check with other seeds |
 | `VALIDATION_SEED` | Separate random seed | `GLOBAL_SEED + 1000` | Seed for all validation blocks | Keep different from `GLOBAL_SEED` |
@@ -203,11 +205,12 @@ The validation blocks (section E) take several hours and are not needed for the 
 
 | Message | Cause | Solution |
 |---|---|---|
-| `FileNotFoundError: Working folder not found` | `DATA_DIR` wrong | Set `DATA_DIR` |
-| `[geo_metadata_prior] … missing` / file not found | `USE_GEO_PRIORS = True` but no priors file in `<DATA_DIR>/geo_metadata_outputs/` | Add the file ([household_priors.md](household_priors.md)) or set `USE_GEO_PRIORS = False` |
+| `FileNotFoundError: Working folder not found` | `data_dir` in `config.yaml` wrong | Correct `data_dir` in `config.yaml` |
+| `FileNotFoundError: Folder not found: …preprocessing_out` | Part 1 not run, or other folder name in `config.yaml` | Run Part 1; check `config.yaml` |
+| `[geo_metadata_prior] … missing` / file not found | `USE_GEO_PRIORS = True` but no priors file in `<data_dir>/analysis_in/geo_metadata_outputs/` | Add the file ([household_priors.md](household_priors.md)) or set `USE_GEO_PRIORS = False` |
 | `[sources_meta] missing columns: ['source_class', …]` | Part 1 outputs from an older pipeline version | Re-run Part 1 |
 | Warning: modules in file but not in `MODULE_WEIGHT` (or vice versa) | Priors file and Part 2 module lists differ | Add the module to `MODULE_WEIGHT` and `MODULE_SOURCE_MAP` (weight 0 to ignore it) |
-| Warning: label does not fire | A label in `MODULE_SOURCE_MAP` matches no source | Check spelling against `lookups/source_categories_per_origin.csv` |
+| Warning: label does not fire | A label in `MODULE_SOURCE_MAP` matches no source | Check spelling against `analysis_out/lookups/source_categories_per_origin.csv` |
 | `NameError: best_alpha` / `PRIOR_STRENGTH` | Cells run out of order | Restart the kernel and run all cells from the top (or follow "Running without validation") |
 | `KeyError` in *Build master validation summary* | A validation block was switched off | Run all validation blocks, or skip the whole validation section |
 | `AssertionError: GREEDY failed to cover the universe` | Inconsistent inputs | Re-run Part 1 and Part 2 completely |

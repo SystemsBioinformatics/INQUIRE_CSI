@@ -126,7 +126,7 @@ Results of the reference run on the INQUIRE household dust data. All other docum
 | Own-product factor | `HH_SAME_HOUSEHOLD` = 1.0 | Effect of preferring a household's own products |
 | Tiered cover | `USE_TIERED_COVER = True` | Strict database hierarchy instead of joint optimization |
 
-Save the outputs of each run in a separate working folder (or rename `set_cover_outputs`), so that runs are not overwritten.
+Keep the outputs of each run apart so that runs are not overwritten: in `config.yaml`, point `data_dir` to a different folder or change the `analysis_out` folder name (e.g., `analysis_out_run2`) before running Part 2 (and Part 3).
 
 ---
 

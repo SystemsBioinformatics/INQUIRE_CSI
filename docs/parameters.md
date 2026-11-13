@@ -4,11 +4,26 @@ All parameters a user may need to set, in one place. The **cell** column gives t
 
 Explanations are in the part documentation; the "Change when" column is a short reminder.
 
+## Shared configuration – `config.yaml` (repository root)
+
+Read by all three notebooks (PyYAML). Paths are relative to the location of `config.yaml`, or absolute. Change the working folder here, not in the notebooks.
+
+| Key | Default | Change when |
+|---|---|---|
+| `data_dir` | `data` | Working folder elsewhere |
+| `folders: preprocessing_in` | `preprocessing_in` | Other input folder name (Part 1 input; must exist) |
+| `folders: preprocessing_out` | `preprocessing_out` | Part 1 output (read by Part 2) |
+| `folders: analysis_in` | `analysis_in` | Part 2 extra input (household priors) |
+| `folders: analysis_out` | `analysis_out` | Part 2 output (read by Part 3); use another name to keep runs separate |
+| `folders: visualization_out` | `visualization_out` | Part 3 output (figures) |
+
+The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old hard-coded `DATA_DIR = Path("../data")` no longer exists.
+
 ## Part 1 – INQUIRE_CSI_Pt1_Preprocessing
 
 | Parameter | Cell | Default | Change when |
 |---|---|---|---|
-| `DATA_DIR` | Check if necessary columns exist… | `../data` | Inputs elsewhere |
+| `PREP_IN_DIR`, `PREP_OUT_DIR`, `LOOKUP_IN_DIR` | Configuration | `<data_dir>/preprocessing_in`, `<data_dir>/preprocessing_out`, `PREP_IN_DIR/lookups` | Set via `config.yaml`, not in the notebook |
 | Input file names | Check columns / Load raw input data | see [input_data.md](input_data.md) | Other files |
 | `GLOBAL_SEED` | Imports & setup | 1 | – |
 | `ENCODINGS` | Imports & setup | utf-8, utf-8-sig, cp1252, cp1250, latin1 | Unusual file encodings |
@@ -16,7 +31,7 @@ Explanations are in the part documentation; the "Change when" column is a short 
 | `INCHIKEY_DFS`, `INCHIKEY_COL_NAMES` | InChIKey cleanup (all source DBs & dust) | all six source databases + both dust tables; `inchikey`, `InChIKey`, `InChiKey` | New databases; InChIKey column with another name |
 | `INCHIKEY_MISSING` | same | "", "nan", "none", "na", "n/a", "null", "<na>", "-", "--" | Other placeholders in your files |
 | `INCHIKEY_STANDARD` | same | `[A-Z]{14}-[A-Z]{10}-[A-Z]` (only used to report odd keys) | – |
-| `SOURCE_CLASS_FILE`, `SOURCE_CLASS_SHEET` | Add the two-level reporting categories… | `lookups/source_class_mapping.xlsx`, `source_class_mapping` | Other mapping file |
+| `SOURCE_CLASS_FILE`, `SOURCE_CLASS_SHEET` | Add the two-level reporting categories… | `LOOKUP_IN_DIR / "source_class_mapping.xlsx"` (`preprocessing_in/lookups/`), sheet `source_class_mapping` | Other mapping file |
 | `DROP_EMPTY_COLS_STD` | same | `False` | Drop empty columns from separate standardized databases |
 | `DROP_COLS_STD` | same | `["ID", "#"]` | Other uninformative columns |
 | `COMPOUND_COLS` | Save all compounds (inchikey, names, CAS, DTXSID)… | name, CAS and DTXSID columns per database | Other column names in your source files |
@@ -31,7 +46,7 @@ Explanations are in the part documentation; the "Change when" column is a short 
 
 | Parameter | Cell | Default | Change when |
 |---|---|---|---|
-| `DATA_DIR` | Check if necessary columns exist… | `../data` | Same as Part 1 |
+| `PREP_OUT_DIR`, `AN_IN_DIR`, `AN_OUT_DIR` | Configuration | `<data_dir>/preprocessing_out`, `…/analysis_in`, `…/analysis_out` | Set via `config.yaml`, not in the notebook |
 | `USE_GEO_PRIORS` | Check if necessary columns exist… | `True` | `False` if no household priors file is available |
 | `GLOBAL_SEED` | Imports & setup | 1 | Seed robustness check |
 | `VALIDATION_SEED` | Separate random seed for validation | `GLOBAL_SEED + 1000` | Keep ≠ `GLOBAL_SEED` |
@@ -66,8 +81,7 @@ Fixed inside functions (change only if you know why): `lambda_cover = 6.0`, `lam
 
 | Parameter | Cell | Default | Change when |
 |---|---|---|---|
-| `DATA_DIR` | Check if necessary columns exist… | `../data` | Same as Parts 1–2 |
-| `IN_DIR`, `FIG_DIR` | same | `set_cover_outputs`, `set_cover_outputs/set_cover_figures` | – |
+| `IN_DIR`, `FIG_DIR` | Configuration | `<data_dir>/analysis_out/set_cover_outputs`, `<data_dir>/visualization_out` | Set via `config.yaml`, not in the notebook |
 | `DROP_LL_SAMPLES` (+ 2-letter code) | Ensure labels are clean | `False` | Exclude one sample group |
 | Category level (silenced lines) | Color maps, figure, loop, heatmap and Sankey cells | `source_class_domain` | Finer reporting level |
 | Category threshold (`>= 1`) | Heatmap and Sankey cells | 1% in at least one sample group | More/fewer categories shown |

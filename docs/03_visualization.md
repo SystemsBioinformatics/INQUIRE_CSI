@@ -17,13 +17,13 @@ All shares are expressed as **percentages of the unique attributable compounds o
 
 | File | From | Mandatory columns |
 |---|---|---|
-| `set_cover_outputs/cover_results_all_samples_beam.csv` | Part 2 | `sample`, `source_name`, `source_general_category`, `source_harmonized`, `source_class`, `source_class_domain`, `P`, `marginal_P`, `inchikey`, `feature_name`, `n_unique_chemicals`, `n_unique_sources`, `n_unique_source_harmonized` (plus `cover_id`) |
+| `analysis_out/set_cover_outputs/cover_results_all_samples_beam.csv` | Part 2 | `sample`, `source_name`, `source_general_category`, `source_harmonized`, `source_class`, `source_class_domain`, `P`, `marginal_P`, `inchikey`, `feature_name`, `n_unique_chemicals`, `n_unique_sources`, `n_unique_source_harmonized` (plus `cover_id`) |
 
 The **sample group** is the 2-letter sample code `LL`, i.e., the first two letters of the sample ID (pattern `LLNN[_suffix]`, e.g., `FR01_LS2` → `FR`). In the INQUIRE data, `LL` is the country; with other data it can be any grouping (e.g., site, campaign, matrix). The notebook and the output file names still use the word "country" for this group (e.g., column `country`, `country_name_map`, `inquire_csi_country-source_sankey.html`).
 
 ## Outputs
 
-Folder `set_cover_outputs/set_cover_figures/`:
+Written directly into the folder `data/visualization_out/` (created automatically; name set in `config.yaml`):
 
 | File | Content |
 |---|---|
@@ -46,7 +46,7 @@ About 12 minutes on the test laptop (INQUIRE reference run: 00:12:13); building 
 
 **1. Title; reset environment; imports & setup.** Log file `inquire_csi_pt3_visualization_log_<yymmdd>.log`.
 
-**2. Check columns and load input.** Sets `DATA_DIR`, the input folder `IN_DIR = <DATA_DIR>/set_cover_outputs` and the figure folder `FIG_DIR`, checks the mandatory columns and loads the main result table of Part 2.
+**2. Check columns and load input.** Reads `config.yaml` and sets `DATA_DIR`, the input folder `IN_DIR = <analysis_out>/set_cover_outputs` and the figure folder `FIG_DIR = <visualization_out>`, checks the mandatory columns and loads the main result table of Part 2.
 
 **3. Clean labels, sample groups and cover 1.** Strips spaces from labels, creates the 2-letter sample code (`LL`, stored in the column `country`), optionally removes all samples of one group (`DROP_LL_SAMPLES`), and keeps only rows with `cover_id = 1`.
 
@@ -71,8 +71,8 @@ About 12 minutes on the test laptop (INQUIRE reference run: 00:12:13); building 
 
 | Parameter | Cell | Default | Meaning | When to change |
 |---|---|---|---|---|
-| `DATA_DIR` | Check columns | `../data` | Working folder | Different folder structure |
-| `IN_DIR`, `FIG_DIR` | Check columns | `<DATA_DIR>/set_cover_outputs`, `…/set_cover_figures` | Input and figure folders | – |
+| `config.yaml` (`data_dir`, `folders`) | Check columns | `data`; `analysis_out`, `visualization_out` | Working folder and folder names (shared with Parts 1–2) | Edit `config.yaml`, not the notebook |
+| `IN_DIR`, `FIG_DIR` | Check columns | `<data_dir>/analysis_out/set_cover_outputs`, `<data_dir>/visualization_out` | Input and figure folders (derived from `config.yaml`) | – |
 | `DROP_LL_SAMPLES` and the 2-letter code (e.g., `"FR"`) | Ensure labels are clean | `False` | Removes all samples of one sample group from all figures | Exclude a group |
 | Category level (silenced/un-silenced lines) | Color maps, figure, loop, heatmap and Sankey cells | `source_class_domain` | Level at which sources are grouped and colored | Finer reporting (`source_class`, `source_general_category`, `source_harmonized`) |
 | Minimum share for showing a category (`>= 1`) | Heatmap and Sankey cells | 1% | Categories below this share in every sample group are hidden (heatmap) or merged into "Other" (Sankey) | More or fewer categories |
@@ -98,7 +98,7 @@ About 12 minutes on the test laptop (INQUIRE reference run: 00:12:13); building 
 
 | Message | Cause | Solution |
 |---|---|---|
-| `FileNotFoundError` for `cover_results_all_samples_beam.csv` | Part 2 not run or `DATA_DIR` different | Run Part 2; use the same `DATA_DIR` |
+| `FileNotFoundError` for `cover_results_all_samples_beam.csv` | Part 2 not run or `config.yaml` changed in between | Run Part 2; use the same `config.yaml` (`data_dir`, `analysis_out`) |
 | `missing columns: ['source_class', …]` | Part 2 output from an older pipeline version | Re-run Parts 1 and 2 |
 | `KeyError` in a color lookup | Category level changed in some cells but not in others | Use the same level in all figure cells |
 | HTML figure opens blank | No internet connection (Plotly loaded from CDN) | Connect to the internet, or change `include_plotlyjs="cdn"` to `include_plotlyjs=True` in the `write_html` calls (files become ~4 MB larger but work offline) |

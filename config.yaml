@@ -1,0 +1,15 @@
+# Shared configuration for the INQUIRE-CSI notebooks (Pt1, Pt2, Pt3).
+# Paths are relative to the location of this file, unless absolute.
+# Defaults: every notebook reads from its own input folder (if it has one) and from the
+# output folder(s) of the preceding notebook, and writes to its own output folder.
+
+# Root working folder
+data_dir: data
+
+# Subfolders of data_dir
+folders:
+  preprocessing_in: preprocessing_in    # Pt1 input:  raw databases, sample data, lookups/source_class_mapping.xlsx
+  preprocessing_out: preprocessing_out  # Pt1 output: read by Pt2
+  analysis_in: analysis_in              # Pt2 extra input: geo_metadata_outputs/household_metadata_priors.csv
+  analysis_out: analysis_out            # Pt2 output: read by Pt3
+  visualization_out: visualization_out  # Pt3 output: figures

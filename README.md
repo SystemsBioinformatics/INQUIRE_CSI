@@ -19,10 +19,11 @@ INQUIRE_CSI was developed within the INQUIRE project and first applied to ca. 20
 flowchart LR
     S[Contaminant source databases<br/>own household products, literature products,<br/>CPDat, FooDB, SPECIATE, SPECIEUROPE] --> P1[Part 1<br/>INQUIRE_CSI_Pt1_Preprocessing]
     D[Sample data<br/>InChIKeys per sample] --> P1
-    P1 -->|master contaminant source DB<br/>+ compounds per sample| P2[Part 2<br/>INQUIRE_CSI_Pt2_Analysis_and_Validation<br/>source identification + validation]
-    H[Optional: household priors<br/>household_metadata_priors.csv] --> P2
-    P2 -->|cover_results_all_samples_beam.csv| P3[Part 3, optional<br/>INQUIRE_CSI_Pt3_Visualization]
-    P3 --> F[Heatmaps, Sankey,<br/>3D networks]
+    C[config.yaml<br/>data_dir + folder names] -.-> P1
+    P1 -->|preprocessing_out/<br/>master contaminant source DB<br/>+ compounds per sample| P2[Part 2<br/>INQUIRE_CSI_Pt2_Analysis_and_Validation<br/>source identification + validation]
+    H[Optional: household priors<br/>analysis_in/geo_metadata_outputs/<br/>household_metadata_priors.csv] --> P2
+    P2 -->|analysis_out/set_cover_outputs/<br/>cover_results_all_samples_beam.csv| P3[Part 3, optional<br/>INQUIRE_CSI_Pt3_Visualization]
+    P3 --> F[visualization_out/<br/>Heatmaps, Sankey, 3D networks]
 ```
 
 | Part | Notebook | What it does | Typical runtime* |
@@ -40,6 +41,7 @@ flowchart LR
 ```
 INQUIRE_CSI/
 ├── README.md                   this file
+├── config.yaml                 shared settings: working folder (data_dir) and subfolder names
 ├── requirements.txt            exact package versions (pip)
 ├── environment.yml             same environment for Anaconda (conda)
 ├── CITATION.cff                how to cite this pipeline
@@ -48,8 +50,8 @@ INQUIRE_CSI/
 │   ├── INQUIRE_CSI_Pt1_Preprocessing.ipynb
 │   ├── INQUIRE_CSI_Pt2_Analysis_and_Validation.ipynb
 │   └── INQUIRE_CSI_Pt3_Visualization.ipynb
-├── example_data/               synthetic example data for testing, same structure as data/ (see example_data/README.md)
-├── data/                       working folder (inputs + all outputs); see data/README.md
+├── example_data/               synthetic example data for testing, mirrors the input folders of data/ (see example_data/README.md)
+├── data/                       working folder (inputs in preprocessing_in/ and analysis_in/; outputs in preprocessing_out/, analysis_out/, visualization_out/); see data/README.md
 └── docs/
     ├── installation.md                  software, environment, folder structure, reproducibility
     ├── input_data.md                    all input files, formats and mandatory columns
@@ -72,11 +74,11 @@ INQUIRE_CSI/
    conda activate inquire_csi
    ```
 2. **Get the input data:**
-   - **Source databases and the source class mapping:** copy files into `data/` (mapping file into `data/lookups/`).
+   - **Source databases and the source class mapping:** create `data/preprocessing_in/` and copy the files into it (mapping file into `data/preprocessing_in/lookups/`).
    - **Sample data:** use your own, or the synthetic test data from `example_data/` (see [data/README.md](data/README.md)).
-   - **To test the pipeline first**, copy the content of `example_data/` into `data/` instead: it contains synthetic sample data, household priors and small example versions of all source databases and of the mapping file (see [example_data/README.md](example_data/README.md)).
+   - **To test the pipeline first**, copy the folders `example_data/preprocessing_in/` and `example_data/analysis_in/` into `data/` instead: it contains synthetic sample data, household priors and small example versions of all source databases and of the mapping file (see [example_data/README.md](example_data/README.md)).
 3. **Start JupyterLab** from the repository folder: `jupyter lab`.
-4. **Check the working-folder path** `DATA_DIR` in the first data-loading cell of each notebook. The default `../data` works if you keep the repository structure. In Part 2, set `USE_GEO_PRIORS = False` if you have no household priors file.
+4. **Check `config.yaml`** in the repository root: it sets the working folder (`data_dir`, default `data`) and the subfolder names for all three notebooks. The default works if you keep the repository structure. In Part 2, set `USE_GEO_PRIORS = False` if you have no household priors file.
 5. **Run the notebooks in order** 1 → 2 → 3 (Part 3 is optional), each with *Kernel → Restart Kernel and Run All Cells…*, and look at the points listed under "Checks" in each part's documentation.
 
 ---

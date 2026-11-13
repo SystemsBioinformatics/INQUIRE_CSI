@@ -13,7 +13,7 @@ The file is optional: with `USE_GEO_PRIORS = False` in Part 2 (cell *Check if ne
 | `household_id` | `LLNN` | Sample key of the household or sampling site (`LL` = 2-letter sample code, `NN` = 2-digit sample number); must match the sample IDs without suffix (e.g., sample `FR01_LS2` → `FR01`) |
 | `<module>_likelihood` | 0–1 | Relative likelihood that the household has **more** of the sources linked to this module than the average household in the study. 0.5 = average or no information. |
 
-Location: `data/geo_metadata_outputs/household_metadata_priors.csv`. A synthetic example is `example_data/geo_metadata_outputs/household_metadata_priors.csv`.
+Location: `data/analysis_in/geo_metadata_outputs/household_metadata_priors.csv` (folder name set in `config.yaml`). A synthetic example is `example_data/analysis_in/geo_metadata_outputs/household_metadata_priors.csv`.
 
 Rules checked by Part 2:
 - The `<module>_likelihood` columns should match the module names in `MODULE_WEIGHT` and `MODULE_SOURCE_MAP` (Part 2). Differences are reported as warnings: modules in the file but not in `MODULE_WEIGHT` are ignored, and modules in `MODULE_WEIGHT` but not in the file have no effect.

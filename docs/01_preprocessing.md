@@ -12,7 +12,7 @@ Part 1 prepares all data for the source identification in Part 2. It
 
 ## Inputs
 
-From `data/` (`DATA_DIR`); formats and mandatory columns in [input_data.md](input_data.md):
+From `data/preprocessing_in/` (set by `config.yaml`; the folder must exist, otherwise Part 1 stops with an error); formats and mandatory columns in [input_data.md](input_data.md):
 
 | Input | File |
 |---|---|
@@ -24,6 +24,8 @@ From `data/` (`DATA_DIR`); formats and mandatory columns in [input_data.md](inpu
 | SPECIATE | `SPECIATE.xlsx` |
 | SPECIEUROPE | `SPECIEUROPE.xlsx` |
 | Source class mapping | `lookups/source_class_mapping.xlsx` |
+
+All outputs are written to `data/preprocessing_out/` (created automatically; paths below are relative to it).
 
 ## Outputs
 
@@ -59,7 +61,7 @@ About 14 minutes on the test laptop (INQUIRE reference run: 00:13:39). Loading t
 
 **2. Imports & setup.** Loads the packages, starts logging (messages appear in the notebook and in `inquire_csi_pt1_preprocessing_log_<yymmdd>.log`), defines helper functions (reading CSV/Excel with automatic encoding fallback over `ENCODINGS`, column checks, whitespace stripping) and sets `GLOBAL_SEED = 1`.
 
-**3. Check necessary columns.** Sets `DATA_DIR` (stops if the folder does not exist), reads only the header row of every input file and checks the mandatory columns. Stops with a list of missing and available columns if a column is missing. This is fast and avoids loading large files only to fail later.
+**3. Check necessary columns.** Reads `config.yaml` and sets `DATA_DIR`, `PREP_IN_DIR` and `PREP_OUT_DIR` (stops if the working or input folder does not exist; creates the output folders), reads only the header row of every input file and checks the mandatory columns. Stops with a list of missing and available columns if a column is missing. This is fast and avoids loading large files only to fail later.
 
 **4. Load raw input data.** Loads all files and prints their numbers of rows and columns. SPECIATE profiles named "Overall Average" are removed, because they are averages over many sources, not real sources.
 
@@ -110,7 +112,7 @@ The next two cells print column statistics before and after aggregation and save
 
 | Parameter | Cell | Default | Meaning | When to change |
 |---|---|---|---|---|
-| `DATA_DIR` | Check columns | `../data` | Working folder with all inputs; outputs go to subfolders | Different folder structure |
+| `config.yaml` (`data_dir`, `folders`) | Check columns | `data`; `preprocessing_in`, `preprocessing_out` | Working folder; Part 1 reads `PREP_IN_DIR` and writes `PREP_OUT_DIR` | Different folder or folder names: edit `config.yaml`, not the notebook |
 | Input file names | Check columns / Load raw input data | see Inputs | Names of the input files | Other file names |
 | `GLOBAL_SEED` | Imports & setup | 1 | Random seed (no random step in Part 1; kept for consistency) | – |
 | `ENCODINGS` | Imports & setup | utf-8, utf-8-sig, cp1252, cp1250, latin1 | Text encodings tried, in this order | Files in other encodings |
@@ -119,7 +121,7 @@ The next two cells print column statistics before and after aggregation and save
 | `INCHIKEY_COL_NAMES` | InChIKey cleanup | `inchikey`, `InChIKey`, `InChiKey` | Possible names of the InChIKey column | InChIKey column with another name |
 | `INCHIKEY_MISSING` | InChIKey cleanup | "", "nan", "none", "na", "n/a", "null", "<na>", "-", "--" | Placeholder values treated as missing | Other placeholders in your files |
 | `INCHIKEY_STANDARD` | InChIKey cleanup | `[A-Z]{14}-[A-Z]{10}-[A-Z]` | Standard InChIKey format; only used to report odd keys | – |
-| `SOURCE_CLASS_FILE`, `SOURCE_CLASS_SHEET` | Add reporting categories | `lookups/source_class_mapping.xlsx`, `source_class_mapping` | Mapping file and sheet for `source_class` / `source_class_domain` | Other mapping file |
+| `SOURCE_CLASS_FILE`, `SOURCE_CLASS_SHEET` | Add reporting categories | `preprocessing_in/lookups/source_class_mapping.xlsx` (`LOOKUP_IN_DIR`), `source_class_mapping` | Mapping file and sheet for `source_class` / `source_class_domain` | Other mapping file |
 | `DROP_EMPTY_COLS_STD` | Add reporting categories | `False` | `True` drops completely empty columns from the separate standardized databases (core columns are protected) | Smaller output files |
 | `DROP_COLS_STD` | Add reporting categories | `["ID", "#"]` | Columns dropped from the separate standardized databases | Other uninformative columns |
 | `COMPOUND_COLS` | Save all compounds | name, CAS and DTXSID columns per database (see step 11) | Which input columns feed the all-compounds lookup | Other column names in your source files |
@@ -143,7 +145,7 @@ The next two cells print column statistics before and after aggregation and save
 | Whitespace cleanup | Which columns were cleaned; "Column names already clean" | Information only |
 | InChIKey cleanup | Per table: rows with junk set to missing, keys corrected "0" → "O" (first 5 shown), non-standard keys kept (first 5 shown); no "not found"/"no InChIKey column" warnings | Many junk rows or non-standard keys → check the InChIKeys in that input file |
 | Standardize | Number of FooDB semi-duplicates removed; unified source rows and unique source IDs | Large unexpected changes → check input |
-| Reporting classes | "all_sources_0 mapped to a source_class"; no "Unmapped Sources" warnings | Unmapped keys → add them to the mapping file (see `lookups/source_class_unmapped.csv`) |
+| Reporting classes | "all_sources_0 mapped to a source_class"; no "Unmapped Sources" warnings | Unmapped keys → add them to the mapping file (see `preprocessing_out/lookups/source_class_unmapped.csv`) |
 | Standardize source metadata | "rows → … unique sources saved"; no warning about sources with more than one metadata row | A warning means one `source_id` carries different names or categories in the input; the first row is kept |
 | All-compounds lookup | Number of compounds and how many have a name, CAS and DTXSID; warnings about missing columns; junk, corrected and non-standard InChIKeys (same as in the InChIKey cleanup) | Missing columns are expected if your source files lack them; many corrected or non-standard keys → check the InChIKeys in the input |
 | Aggregation | Reduction per origin; largest equivalence groups; "Equality check … True" for members of one group | The largest groups are typically CPDat products with one compound and "Unknown" category |
@@ -154,7 +156,8 @@ The next two cells print column statistics before and after aggregation and save
 
 | Message | Cause | Solution |
 |---|---|---|
-| `FileNotFoundError: Working folder not found` | `DATA_DIR` wrong | Set `DATA_DIR` to your working folder |
+| `FileNotFoundError: Working folder not found` | `data_dir` in `config.yaml` wrong | Correct `data_dir` in `config.yaml` |
+| `FileNotFoundError: Input folder not found` | `data/preprocessing_in/` does not exist | Create it and copy the input files into it |
 | `ValueError: [<dataset>] missing columns: …` | Column names in the input differ from the expected ones | Rename the columns in the input file (case-sensitive) or adapt the check and the mapping cell |
 | `[source_class mapping] missing columns` | The mapping sheet is not the first sheet, or columns are missing | Make `source_class_mapping` the first sheet; check the six columns |
 | `source_class mapping has … rows with the same key but different classes` | Duplicate keys with conflicting classes in the mapping file | Keep one class per key |

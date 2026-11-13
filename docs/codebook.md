@@ -1,6 +1,6 @@
 # Codebook: output files and variables
 
-This codebook lists every file the pipeline writes and explains its columns. All files are written to subfolders of the working folder `data/` (`DATA_DIR`); folders are created automatically. Input files are described in [input_data.md](input_data.md).
+This codebook lists every file the pipeline writes and explains its columns. All files are written to subfolders of the working folder `data/` (`data_dir` in `config.yaml`); folders are created automatically. The three output folders are named `preprocessing_out` (Part 1), `analysis_out` (Part 2) and `visualization_out` (Part 3); paths in the file map and section headings are relative to `data/`. Input files are described in [input_data.md](input_data.md).
 
 **Bold** file names are read by a later part; all others are for traceability, quality control, and reporting.
 
@@ -18,39 +18,39 @@ This codebook lists every file the pipeline writes and explains its columns. All
 
 | Folder | File | Written by | Read by | Section |
 |---|---|---|---|---|
-| `databases_id_w_suffix/` | `cpdat_products_suffix.csv`, `cpdat_products_meta_suffix.csv`, `cpdat_puc_suffix.csv`, `household_metadata_suffix.csv`, `household_products_no-suffix.csv`, `consumer_products_suffix.csv`, `foodb_suffix.csv`, `specieurope_suffix.csv`, `speciate_suffix.csv` | Part 1 | – | 2.1 |
-| `databases_standardized/` | `all_sources_standardized.csv` | Part 1 | – | 2.2 |
+| `preprocessing_out/databases_id_w_suffix/` | `cpdat_products_suffix.csv`, `cpdat_products_meta_suffix.csv`, `cpdat_puc_suffix.csv`, `household_metadata_suffix.csv`, `household_products_no-suffix.csv`, `consumer_products_suffix.csv`, `foodb_suffix.csv`, `specieurope_suffix.csv`, `speciate_suffix.csv` | Part 1 | – | 2.1 |
+| `preprocessing_out/databases_standardized/` | `all_sources_standardized.csv` | Part 1 | – | 2.2 |
 | | **`sources_meta_standardized.csv`** | Part 1 | Part 2 | 2.2 |
 | | `household_products_standardized.csv`, `lit_consumer_products_standardized.csv`, `foodb_standardized.csv`, `specieurope_standardized.csv`, `speciate_standardized.csv`, `cpdat_*_standardized.csv` | Part 1 | – | 2.3 |
 | | `all_compounds_standardized.csv` | Part 1 | – (reference) | 2.3 |
 | | `equivalence_groups_members.csv`, `equivalence_groups_summary.csv` | Part 1 | – | 2.4 |
 | | **`dust_standardized.csv`** (or `dust_standardized_qc_cols.csv`) | Part 1 | Part 2 | 2.5 |
-| `all_sources_aggregated/` | `all_sources_aggregated.csv` | Part 1 | – | 2.2 |
-| `masked_sources/` | **`sources_masked.csv`** | Part 1 | Part 2 | 2.2 |
+| `preprocessing_out/all_sources_aggregated/` | `all_sources_aggregated.csv` | Part 1 | – | 2.2 |
+| `preprocessing_out/masked_sources/` | **`sources_masked.csv`** | Part 1 | Part 2 | 2.2 |
 | | `masked_equivalence_groups_members.csv` | Part 1 | – | 2.4 |
 | | `counts_masked.csv`, `valid_sources_masked.csv` | Part 1 | – | 2.6 |
 | | **`sample_universes.csv`** | Part 1 | Part 2 | 2.5 |
-| `lookups/` | `source_class_mapping.xlsx` | user (input) | Part 1 | [input_data.md](input_data.md#3-source-class-mapping-part-1) |
-| | `source_class_unmapped.csv`, `source_class_unmapped_std_dbs.csv` | Part 1 | – | 2.7 |
-| | `source_categories_per_origin.csv`, `source_metadata_lookup.csv`, `source_metadata_lookup_dict.csv`, `source_prior_lookup.csv`, `source_compound_sets.csv`, `hh_metadata_lookup.csv`, `compound_to_sources_lookup.csv` | Part 2 | – | 3.6 |
-| `geo_metadata_outputs/` | `household_metadata_priors.csv` | user (optional input) | Part 2 | [household_priors.md](household_priors.md) |
-| | `geo_mapping_check.csv` | Part 2 | – | 3.7 |
-| `alpha_tuning/` | `alpha_greedy.csv`, `alpha_beam.csv`, `alphas_greedy_vs_beam.png`, `alphas_greedy_vs_beam_non-log.png`, `prior_strength_calibration.csv` | Part 2 | – | 3.8 |
-| `validation_outputs/` | `master_validation_summary.csv`, `synthetic_validation_precision.png`, `synthetic_validation_boxplot.png`, `loso_jaccard_plot.png` | Part 2 | – | 3.9 |
+| `preprocessing_in/lookups/` | `source_class_mapping.xlsx` | user (input) | Part 1 | [input_data.md](input_data.md#3-source-class-mapping-part-1) |
+| `preprocessing_out/lookups/` | `source_class_unmapped.csv`, `source_class_unmapped_std_dbs.csv` | Part 1 | – | 2.7 |
+| `analysis_out/lookups/` | `source_categories_per_origin.csv`, `source_metadata_lookup.csv`, `source_metadata_lookup_dict.csv`, `source_prior_lookup.csv`, `source_compound_sets.csv`, `hh_metadata_lookup.csv`, `compound_to_sources_lookup.csv` | Part 2 | – | 3.6 |
+| `analysis_in/geo_metadata_outputs/` | `household_metadata_priors.csv` | user (optional input) | Part 2 | [household_priors.md](household_priors.md) |
+| `analysis_out/geo_check/` | `geo_mapping_check.csv` | Part 2 | – | 3.7 |
+| `analysis_out/alpha_tuning/` | `alpha_greedy.csv`, `alpha_beam.csv`, `alphas_greedy_vs_beam.png`, `alphas_greedy_vs_beam_non-log.png`, `prior_strength_calibration.csv` | Part 2 | – | 3.8 |
+| `analysis_out/validation_outputs/` | `master_validation_summary.csv`, `synthetic_validation_precision.png`, `synthetic_validation_boxplot.png`, `loso_jaccard_plot.png` | Part 2 | – | 3.9 |
 | | `posterior_summary.csv`, `robustness_summary.csv` | Part 2 | – | 3.4, 3.5 |
 | | `final_checks_per_sample.csv`, `own_household_products_check.csv` | Part 2 | – | 3.10, 3.11 |
-| `set_cover_outputs/` | **`cover_results_all_samples_beam.csv`**, `<sample>_beam.csv` | Part 2 | Part 3 | 3.1 |
+| `analysis_out/set_cover_outputs/` | **`cover_results_all_samples_beam.csv`**, `<sample>_beam.csv` | Part 2 | Part 3 | 3.1 |
 | | `unattributed_results_all_samples_beam.csv` | Part 2 | – | 3.2 |
 | | `source_posterior_all_samples_beam.csv` | Part 2 | – | 3.3 |
 | | `compound_attribution_per_origin.csv` | Part 2 | – | 3.12 |
-| `set_cover_outputs/set_cover_figures/` | `inquire_csi_figure.html`, `inquire_csi_figure_<LL>.html`, `inquire_csi_country-source_category_heatmap.png`, `…_heatmap_land.png`, `inquire_csi_country-source_sankey.html`, `inquire_csi_country-source_category_sankey.html` | Part 3 | – | 4 |
+| `visualization_out/` | `inquire_csi_figure.html`, `inquire_csi_figure_<LL>.html`, `inquire_csi_country-source_category_heatmap.png`, `…_heatmap_land.png`, `inquire_csi_country-source_sankey.html`, `inquire_csi_country-source_category_sankey.html` | Part 3 | – | 4 |
 | `notebooks/` | `inquire_csi_pt1_preprocessing_log_<yymmdd>.log`, `inquire_csi_pt2_analysis_and_validation_log_<yymmdd>.log`, `inquire_csi_pt3_visualization_log_<yymmdd>.log` | Parts 1–3 | – | run logs |
 
 ---
 
 ## 2. Part 1 outputs
 
-### 2.1 Databases with ID suffixes (`databases_id_w_suffix/`)
+### 2.1 Databases with ID suffixes (`preprocessing_out/databases_id_w_suffix/`)
 Copies of the input databases, unchanged except that the ID column carries a database suffix: `_CPD` (CPDat), `_HHP` (own household products; note: the file `household_products_no-suffix.csv` *does* contain the suffix despite its name), `_COP` (literature products), `_FDB` (FooDB), `_SUS` (SPECIATE), `_SEU` (SPECIEUROPE). Columns as in the input files ([input_data.md](input_data.md)).
 
 ### 2.2 Harmonized source tables
@@ -70,7 +70,7 @@ Copies of the input databases, unchanged except that the ID column carries a dat
 
 `sources_meta_standardized.csv` has the same columns without `inchikey`, with **one row per source** (if a `source_id` has more than one set of metadata in the input, the first row is kept and Part 1 logs a warning). Missing `source_kind`, `source_general_category` and `source_harmonized` are set to "Unknown".
 
-### 2.3 Separate standardized databases (`databases_standardized/<database>_standardized.csv`)
+### 2.3 Separate standardized databases (`preprocessing_out/databases_standardized/<database>_standardized.csv`)
 Each database on its own after renaming to the harmonized schema, with all original columns kept (minus `ID`, `#` and, if `DROP_EMPTY_COLS_STD = True`, completely empty columns), plus `source_class` and `source_class_domain` where the key columns exist. Additional harmonized columns: `feature_name` (compound name in that database) and `source_type` (third classification level, e.g., `Group3`, `food_type`, SPECIATE level 3). The CPDat helper files are `cpdat_products_standardized.csv` (compositions), `cpdat_products_meta_standardized.csv` (product titles), `cpdat_puc_standardized.csv` (one PUC per product), `cpdat_products_simple_standardized.csv` (product × InChIKey), `cpdat_sources_standardized.csv` (CPDat in the harmonized schema) and `cpdat_titles_standardized.csv`.
 
 **All-compounds lookup (`all_compounds_standardized.csv`).** One row per compound (InChIKey) found in any of the six source databases (all sources, before aggregation and masking). Several values in one cell are separated by "; " (`MULTI_SEP`). Reference table only; not used by Part 2.
@@ -120,7 +120,7 @@ Each database on its own after renaming to the harmonized schema, with all origi
 
 ## 3. Part 2 outputs
 
-### 3.1 Main result table: `cover_results_all_samples_beam.csv` (and `<sample>_beam.csv`)
+### 3.1 Main result table: `analysis_out/set_cover_outputs/cover_results_all_samples_beam.csv` (and `<sample>_beam.csv`)
 One row per **sample × cover × source × compound**, for compounds present in the sample. A compound explained by two sources of the same cover appears twice; count unique `inchikey` values, not rows.
 
 | Column | Level | Meaning |
@@ -151,7 +151,7 @@ One row per **sample × cover × source × compound**, for compounds present in 
 
 **Typical use:** filter `cover_id == 1` for the best explanation; count unique `inchikey` per `source_class_domain` (or another category) for category shares.
 
-### 3.2 `unattributed_results_all_samples_beam.csv`
+### 3.2 `analysis_out/set_cover_outputs/unattributed_results_all_samples_beam.csv`
 Compounds of each sample that do not appear in any cover of that sample, mainly compounds without any source in the masked database, plus all compounds of samples that were skipped.
 
 | Column | Meaning |
@@ -160,7 +160,7 @@ Compounds of each sample that do not appear in any cover of that sample, mainly 
 | `inchikey` | Unattributed compound |
 | `feature_name` | Compound name |
 
-### 3.3 `source_posterior_all_samples_beam.csv`
+### 3.3 `analysis_out/set_cover_outputs/source_posterior_all_samples_beam.csv`
 One row per sample × source that appears in at least one cover.
 
 | Column | Meaning |
@@ -170,7 +170,7 @@ One row per sample × source that appears in at least one cover.
 | `cover_support` | Number of covers of the sample containing the source |
 | `posterior_share` | `posterior_P` divided by the sum of `posterior_P` over all sources of the sample (sums to 1 per sample); the source's share of the explanation |
 
-### 3.4 `validation_outputs/posterior_summary.csv`
+### 3.4 `analysis_out/validation_outputs/posterior_summary.csv`
 One row per sample; computed from the source shares (`posterior_P` normalized over the sources of the sample).
 
 | Column | Meaning |
@@ -183,10 +183,10 @@ One row per sample; computed from the source shares (`posterior_P` normalized ov
 | `n_covers` | Number of covers of the sample |
 | `mean_solution_frequency`, `median_solution_frequency`, `sd_solution_frequency` | Summary of `solution_frequency` over the sources of the sample |
 
-### 3.5 `validation_outputs/robustness_summary.csv`
+### 3.5 `analysis_out/validation_outputs/robustness_summary.csv`
 One row per sample × source: `solution_frequency`, `weighted_frequency` (sum of `P` of the covers containing the source / sum of `P` of all covers), `covers_present` (n), `total_covers` (N), `ci_low`, `ci_high`, `ci_width` (definitions as in 3.1).
 
-### 3.6 Lookups (`lookups/`)
+### 3.6 Lookups (`analysis_out/lookups/`)
 
 | File | Columns | Meaning |
 |---|---|---|
@@ -198,15 +198,15 @@ One row per sample × source: `solution_frequency`, `weighted_frequency` (sum of
 | `hh_metadata_lookup.csv` | `household_id`, `likelihoods` | Household likelihoods as used (dictionary text); empty if `USE_GEO_PRIORS = False` |
 | `compound_to_sources_lookup.csv` | `inchikey`, `sources` | All masked sources containing each compound |
 
-### 3.7 `geo_metadata_outputs/geo_mapping_check.csv`
+### 3.7 `analysis_out/geo_check/geo_mapping_check.csv`
 One row per label in `MODULE_SOURCE_MAP`: `module`, `source_origin`, `label`, `status` (`OK`, `NOT FOUND` = label matches no source, `ORIGIN NOT IN DB`), `n_sources_matched`.
 
-### 3.8 Tuning (`alpha_tuning/`)
+### 3.8 Tuning (`analysis_out/alpha_tuning/`)
 - `alpha_greedy.csv`, `alpha_beam.csv`: `alpha` (penalty weight tested) and `score` (mean over synthetic mixtures of compound precision − 0.25 × (expansion − 1); higher = better).
 - `alphas_greedy_vs_beam.png`, `alphas_greedy_vs_beam_non-log.png`: tuning curves (log and linear alpha axis).
 - `prior_strength_calibration.csv`: per sample, `neg_log_prior_range` (5th–95th percentile spread of −log(prior) over the candidate sources) and `penalty_range` (same for alpha × penalty). `PRIOR_STRENGTH` = `PRIOR_TO_PENALTY_RATIO` × median(`penalty_range`) / median(`neg_log_prior_range`).
 
-### 3.9 `validation_outputs/master_validation_summary.csv` and figures
+### 3.9 `analysis_out/validation_outputs/master_validation_summary.csv` and figures
 
 | Column | Meaning |
 |---|---|
@@ -221,7 +221,7 @@ Metric definitions: compound precision, recall, F1, Jaccard, source precision/re
 
 Figures: `synthetic_validation_precision.png` (mean compound precision with 95% CI and mean number of recovered sources vs. mixture size), `synthetic_validation_boxplot.png` (distribution of compound precision vs. mixture size), `loso_jaccard_plot.png` (histogram of best Jaccard per source).
 
-### 3.10 `validation_outputs/final_checks_per_sample.csv`
+### 3.10 `analysis_out/validation_outputs/final_checks_per_sample.csv`
 
 | Column | Meaning |
 |---|---|
@@ -236,7 +236,7 @@ Figures: `synthetic_validation_precision.png` (mean compound precision with 95% 
 | `n_compounds_attributable`, `n_compounds_unattributed` | Sample compounds with / without a source in the database |
 | `share_unattributed` | Unattributed / (attributable + unattributed) |
 
-### 3.11 `validation_outputs/own_household_products_check.csv`
+### 3.11 `analysis_out/validation_outputs/own_household_products_check.csv`
 One row per sample whose own household products are candidates.
 
 | Column | Meaning |
@@ -247,7 +247,7 @@ One row per sample whose own household products are candidates.
 | `main_origin_explaining_the_rest`, `n_rest_explained_by_main_origin` | Database explaining most of the remaining compounds, and how many |
 | `hh_factor_own_products`, `hh_factor_other_hh_products` | Mean household factor applied to own products (should equal `HH_SAME_HOUSEHOLD`) and to products with another key (0.2–0.5) |
 
-### 3.12 `set_cover_outputs/compound_attribution_per_origin.csv`
+### 3.12 `analysis_out/set_cover_outputs/compound_attribution_per_origin.csv`
 Best cover only. Each attributed compound is assigned once, to the highest-priority database (by `SOURCE_WEIGHT`) among the sources of the best cover that contain it.
 
 | Column | Meaning |
@@ -258,7 +258,7 @@ Best cover only. Each attributed compound is assigned once, to the highest-prior
 
 ---
 
-## 4. Part 3 outputs (`set_cover_outputs/set_cover_figures/`)
+## 4. Part 3 outputs (`visualization_out/`)
 
 | File | Content |
 |---|---|

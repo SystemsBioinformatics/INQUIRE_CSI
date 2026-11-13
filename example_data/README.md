@@ -2,16 +2,18 @@
 
 Small synthetic data set for **testing** the INQUIRE_CSI pipeline without downloading the full source databases. Results obtained with these data have **no scientific meaning**.
 
-The folder has the same structure as the working folder `data/`, so its content can be copied into `data/` as a whole (see "How to use").
+The folder mirrors the input folders of the working folder `data/` (`preprocessing_in/` and `analysis_in/`), so both can be copied into `data/` as they are (see "How to use").
 
 ## Files
 
 ### Sample data and household priors
 
+Paths are relative to `example_data/preprocessing_in/`, except the household priors (`example_data/analysis_in/`).
+
 | File | Content |
 |---|---|
 | `Sample_Data.xlsx` | 500 compounds × 40 synthetic samples plus one blank column (`Blank_NIST`, listed in `dust_cols_drop` of Part 1). The compounds are real compounds detected in household dust in the INQUIRE project (InChIKey, name, class). About half of them (253) have at least one source in the example source databases below, and half have none, so both attributed and unattributed compounds occur, as in real samples. Presence/absence was generated at random from each compound's detection frequency, with random sample and sample-group effects. The concentrations are random numbers > 0 (column `Concentration Type` = "Randomly generated concentrations"). |
-| `geo_metadata_outputs/household_metadata_priors.csv` | Random household likelihoods (0.02–0.98, mid-rank) for the 29 modules, for 30 of the 32 synthetic sample keys (`household_id`). Two keys are left out on purpose, to test samples without priors. |
+| `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` | Random household likelihoods (0.02–0.98, mid-rank) for the 29 modules, for 30 of the 32 synthetic sample keys (`household_id`). Two keys are left out on purpose, to test samples without priors. |
 
 ### Example source databases
 
@@ -59,7 +61,7 @@ IDs follow the pattern `LLNN[_suffix]` used by the pipeline (`LL` = 2-letter sam
 
 ## How to use
 
-1. Copy the **content** of `example_data/` (all files and the subfolders `CPDat/`, `lookups/` and `geo_metadata_outputs/`; the README files are not needed) into the working folder `data/`. If `data/` already contains the real databases, use a second working folder instead and change `DATA_DIR` in all three notebooks.
+1. Copy the two folders `example_data/preprocessing_in/` and `example_data/analysis_in/` (the README is not needed) into the working folder `data/`. If `data/` already contains the real databases, copy them into a second working folder instead and point `data_dir` in `config.yaml` to it.
 2. Run `INQUIRE_CSI_Pt1_Preprocessing`, `INQUIRE_CSI_Pt2_Analysis_and_Validation` and (optionally) `INQUIRE_CSI_Pt3_Visualization` as described in the main README, with `DROP_QC_COLUMNS = True` in Part 1.
 3. Part 1 takes a few seconds, Part 2 a few minutes (most of it alpha tuning and validation), Part 3 about a minute.
 

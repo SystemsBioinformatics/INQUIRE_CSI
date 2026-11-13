@@ -98,6 +98,7 @@ Only the packages below are imported by the three notebooks. All other packages 
 | plotly | 6.5.2 | 3 | Interactive 3D networks and Sankey diagram (HTML) |
 | networkx | 3.5 | 3 | Sample–compound–source network graphs |
 | openpyxl | 3.1.5 | 1, 2, 3 | Reading Excel (.xlsx) input files |
+| pyyaml | 6.0.3 | 1, 2, 3 | Reading the shared `config.yaml` (working folder and subfolder names) |
 | tqdm | 4.67.1 | 1, 2, 3 | Progress bars |
 | ipywidgets | 8.1.7 | 1, 2, 3 | Needed by `tqdm.auto` to draw progress bars in JupyterLab |
 | jupyterlab | 4.4.7 | all | Notebook interface |
@@ -110,35 +111,44 @@ Python standard-library modules (no installation needed): `pathlib`, `re`, `time
 
 ## 4. Folder structure
 
-Keep the repository structure; then the default working-folder path in the notebooks (`../data`, i.e., the `data` folder next to `notebooks`) works without changes. Output subfolders are created automatically.
+Keep the repository structure; then the default working folder (`data_dir: data` in `config.yaml`, i.e., the `data` folder next to `notebooks`) works without changes. The output folders are named `preprocessing_out`, `analysis_out` and `visualization_out` and are created automatically. The input folder `preprocessing_in/` must exist before Part 1 is run.
 
 ```
 INQUIRE_CSI/
+├── config.yaml                             ← shared settings: data_dir and folder names (read by all notebooks)
 ├── notebooks/                              ← open and run the notebooks from here
-├── example_data/                           ← synthetic test data (same structure as data/)
-└── data/                                   ← DATA_DIR (working folder)
-    ├── Sample_Data.xlsx                    ← Part 1 input (your samples or example data)
-    ├── Own_Household_Products.csv          ← Part 1 inputs (source databases, from Zenodo)
-    ├── Own_Household_Products_Metadata.csv
-    ├── Literature_Products.csv
-    ├── CPDat/                              ← 3 .tsv files
-    ├── FooDB.csv
-    ├── SPECIATE.xlsx
-    ├── SPECIEUROPE.xlsx
-    ├── lookups/source_class_mapping.xlsx   ← Part 1 input (reporting classes, from Zenodo)
-    ├── geo_metadata_outputs/               ← optional Part 2 input (household priors)
-    ├── databases_id_w_suffix/              ← Part 1 outputs
-    ├── databases_standardized/             ← Part 1 outputs (read by Part 2)
-    ├── all_sources_aggregated/             ← Part 1 outputs
-    ├── masked_sources/                     ← Part 1 outputs (read by Part 2)
-    ├── lookups/                            ← Part 1 input (mapping) + Part 1/2 lookup outputs
-    ├── alpha_tuning/                       ← Part 2 outputs
-    ├── validation_outputs/                 ← Part 2 outputs
-    └── set_cover_outputs/                  ← Part 2 outputs (read by Part 3)
-        └── set_cover_figures/              ← Part 3 outputs
+├── example_data/                           ← synthetic test data (mirrors the input folders of data/)
+│   ├── preprocessing_in/
+│   └── analysis_in/
+└── data/                                   ← working folder (data_dir)
+    ├── preprocessing_in/                   ← Part 1 inputs (you create/copy)
+    │   ├── Sample_Data.xlsx                ← your samples or example data
+    │   ├── Own_Household_Products.csv      ← source databases (from Zenodo)
+    │   ├── Own_Household_Products_Metadata.csv
+    │   ├── Literature_Products.csv
+    │   ├── CPDat/                          ← 3 .tsv files
+    │   ├── FooDB.csv
+    │   ├── SPECIATE.xlsx
+    │   ├── SPECIEUROPE.xlsx
+    │   └── lookups/source_class_mapping.xlsx   ← reporting classes (from Zenodo)
+    ├── preprocessing_out/                  ← Part 1 outputs (read by Part 2)
+    │   ├── databases_id_w_suffix/
+    │   ├── databases_standardized/
+    │   ├── all_sources_aggregated/
+    │   ├── masked_sources/
+    │   └── lookups/                        ← unmapped source categories (QC)
+    ├── analysis_in/                        ← optional Part 2 input
+    │   └── geo_metadata_outputs/           ← household priors
+    ├── analysis_out/                       ← Part 2 outputs (read by Part 3)
+    │   ├── lookups/
+    │   ├── geo_check/
+    │   ├── alpha_tuning/
+    │   ├── validation_outputs/
+    │   └── set_cover_outputs/
+    └── visualization_out/                  ← Part 3 outputs (figures)
 ```
 
-If you prefer another location, change `DATA_DIR` in Parts 1–3 to the full path of your working folder, e.g., `Path(r"D:/projects/INQUIRE_CSI/data")`. Use forward slashes `/` or a raw string `r"..."` on Windows.
+If you prefer another location, change `data_dir` in `config.yaml` (relative to `config.yaml`, or an absolute path such as `D:/projects/INQUIRE_CSI/data`; use forward slashes `/` on Windows). The subfolder names can be changed under `folders:`. All three notebooks read this file, so there is nothing to change in the notebooks.
 
 **Log files:** Parts 1–3 write a log file (copy of all printed messages) into the folder from which the notebook runs (`notebooks/`): `inquire_csi_pt1_preprocessing_log_<yymmdd>.log`, `inquire_csi_pt2_analysis_and_validation_log_<yymmdd>.log` and `inquire_csi_pt3_visualization_log_<yymmdd>.log`. A new run on the same day overwrites the log of that day. Keep them as a record of each run, but do not upload them to a public repository (they contain sample IDs and per-sample results).
 

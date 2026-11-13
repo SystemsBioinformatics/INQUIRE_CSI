@@ -1,0 +1,15 @@
+{
+  "permission": {
+    "bash": {
+      "cd *": "allow",
+      "cat *": "allow",
+      "python3 *": "allow",
+      "sed *": "allow",
+      "cut *": "allow",
+      "grep *": "allow",
+      "python *": "allow",
+      "pip list *": "allow",
+      "tail *": "allow"
+    }
+  }
+}
