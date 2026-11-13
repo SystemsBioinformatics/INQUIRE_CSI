@@ -2,7 +2,7 @@
 
 This codebook lists every file the pipeline writes and explains its columns. All files are written to subfolders of the working folder `data/` (`data_dir` in `config.yaml`); folders are created automatically. The three output folders are named `preprocessing_out` (Part 1), `analysis_out` (Part 2) and `visualization_out` (Part 3); paths in the file map and section headings are relative to `data/`. Input files are described in [input_data.md](input_data.md).
 
-**Bold** file names are read by a later part; all others are for traceability, quality control, and reporting.
+**Bold** file names are read by a later part; all others are for traceability, quality control, and reporting. Part 2 reads the four bold Part 1 tables from the **SQLite database** `preprocessing_out/inquire_csi_pt1.sqlite` (section 2.8), which holds the same content as the CSV files; the CSV files are still written and can be used for inspection.
 
 **Terms used below**
 - **Sample universe** – the InChIKeys detected in a sample.
@@ -18,18 +18,20 @@ This codebook lists every file the pipeline writes and explains its columns. All
 
 | Folder | File | Written by | Read by | Section |
 |---|---|---|---|---|
+| `preprocessing_out/` | **`inquire_csi_pt1.sqlite`** (database with all Part 1 results except the raw per-database copies) | Part 1 | Part 2 | 2.8 |
+| `preprocessing_out/inspection/` | CSV copy of every database view and sample table, `inquire_csi_pt1.xlsx` | Part 1 | – (inspection) | 2.8 |
 | `preprocessing_out/databases_id_w_suffix/` | `cpdat_products_suffix.csv`, `cpdat_products_meta_suffix.csv`, `cpdat_puc_suffix.csv`, `household_metadata_suffix.csv`, `household_products_no-suffix.csv`, `consumer_products_suffix.csv`, `foodb_suffix.csv`, `specieurope_suffix.csv`, `speciate_suffix.csv` | Part 1 | – | 2.1 |
 | `preprocessing_out/databases_standardized/` | `all_sources_standardized.csv` | Part 1 | – | 2.2 |
-| | **`sources_meta_standardized.csv`** | Part 1 | Part 2 | 2.2 |
+| | **`sources_meta_standardized.csv`** | Part 1 | Part 2 (via database) | 2.2 |
 | | `household_products_standardized.csv`, `lit_consumer_products_standardized.csv`, `foodb_standardized.csv`, `specieurope_standardized.csv`, `speciate_standardized.csv`, `cpdat_*_standardized.csv` | Part 1 | – | 2.3 |
 | | `all_compounds_standardized.csv` | Part 1 | – (reference) | 2.3 |
 | | `equivalence_groups_members.csv`, `equivalence_groups_summary.csv` | Part 1 | – | 2.4 |
-| | **`dust_standardized.csv`** (or `dust_standardized_qc_cols.csv`) | Part 1 | Part 2 | 2.5 |
+| | **`dust_standardized.csv`** (or `dust_standardized_qc_cols.csv`) | Part 1 | Part 2 (via database) | 2.5 |
 | `preprocessing_out/all_sources_aggregated/` | `all_sources_aggregated.csv` | Part 1 | – | 2.2 |
-| `preprocessing_out/masked_sources/` | **`sources_masked.csv`** | Part 1 | Part 2 | 2.2 |
+| `preprocessing_out/masked_sources/` | **`sources_masked.csv`** | Part 1 | Part 2 (via database) | 2.2 |
 | | `masked_equivalence_groups_members.csv` | Part 1 | – | 2.4 |
 | | `counts_masked.csv`, `valid_sources_masked.csv` | Part 1 | – | 2.6 |
-| | **`sample_universes.csv`** | Part 1 | Part 2 | 2.5 |
+| | **`sample_universes.csv`** | Part 1 | Part 2 (via database) | 2.5 |
 | `preprocessing_in/lookups/` | `source_class_mapping.xlsx` | user (input) | Part 1 | [input_data.md](input_data.md#3-source-class-mapping-part-1) |
 | `preprocessing_out/lookups/` | `source_class_unmapped.csv`, `source_class_unmapped_std_dbs.csv` | Part 1 | – | 2.7 |
 | `analysis_out/lookups/` | `source_categories_per_origin.csv`, `source_metadata_lookup.csv`, `source_metadata_lookup_dict.csv`, `source_prior_lookup.csv`, `source_compound_sets.csv`, `hh_metadata_lookup.csv`, `compound_to_sources_lookup.csv` | Part 2 | – | 3.6 |
@@ -115,6 +117,41 @@ Each database on its own after renaming to the harmonized schema, with all origi
 
 ### 2.7 Unmapped categories
 `source_class_unmapped.csv`: category keys (`source_origin`, `source_kind`, `source_general_category`, `source_harmonized`) that are missing from `source_class_mapping.xlsx`. `source_class_unmapped_std_dbs.csv`: the same for the separate standardized databases, with the column `standardized_db` naming the database. Only written if unmapped keys exist.
+
+### 2.8 SQLite database and inspection copies
+`preprocessing_out/inquire_csi_pt1.sqlite` is written at the end of Part 1 (last notebook cell) and rebuilt from scratch on every run. It stores the Part 1 results without repetition (normalized) and is the input of Part 2. It contains **only Part 1 results**; the raw per-database copies (`databases_id_w_suffix/`, `databases_standardized/<database>_standardized.csv`) stay as files and are not loaded. The full definition is in [schema.sql](schema.sql); helper functions are in `notebooks/csi_db.py`.
+
+**Tables**
+
+| Table | One row per | Content |
+|---|---|---|
+| `source_origin` | database | `source_origin` and its ID suffix (`id_suffix`, e.g. `_CPD`) |
+| `source_class` | reporting class | `source_class` ("Domain \| Type") and `source_class_domain` |
+| `source` | source (all sources, before aggregation) | `source_id`, `source_name`, `source_origin`, `source_kind`, `source_general_category`, `source_harmonized`, `source_class` |
+| `compound` | InChIKey of any source database | `inchikey`, preferred `feature_name` |
+| `compound_name`, `compound_cas`, `compound_dtxsid` | value | The multi-valued cells of `all_compounds_standardized.csv`, one row per value in original order (`position`) |
+| `source_compound` | source × compound | `source_id`, `inchikey`, flags `in_aggregated` and `in_masked` (1 if the row is part of `all_sources_aggregated.csv` / `sources_masked.csv`; every row belongs to `all_sources_standardized.csv`) |
+| `source_group` | source in an equivalence group | `stage` (`aggregated` or `masked`), `representative_id`, `member_id`; for `masked` also `masked_hash` and `hh_household` |
+| `sample` | sample | `sample_id`, `position` (column order) |
+| `detected_compound` | row of the sample table | `inchikey`, `feature_name`, `compound_class`, `concentration_type`, `position` (row order) |
+| `sample_compound` | sample × compound with a value | `sample_id`, `inchikey`, `concentration` (long format; missing values have no row) |
+
+**Views** reproduce the CSV files of Part 1 with the same columns and row order (each view `v_<name>` corresponds to `<name>.csv`); use them for queries, e.g. `SELECT * FROM v_sources_masked WHERE source_origin = 'CPDAT'`.
+
+| View | Corresponds to |
+|---|---|
+| `v_all_sources_standardized`, `v_all_sources_aggregated`, `v_sources_masked` | `all_sources_standardized.csv`, `all_sources_aggregated.csv`, `sources_masked.csv` |
+| `v_sources_meta_standardized` | `sources_meta_standardized.csv` |
+| `v_all_compounds_standardized` | `all_compounds_standardized.csv` (multi-valued cells joined with "; ") |
+| `v_equivalence_groups_members`, `v_equivalence_groups_summary`, `v_masked_equivalence_groups_members` | the three equivalence group files (2.4) |
+| `v_counts_masked`, `v_valid_sources_masked` | `counts_masked.csv`, `valid_sources_masked.csv` (2.6) |
+| `v_sample_detections` | new: long format of the sample universes (`sample_id`, `inchikey` with concentration > 0) |
+
+The two wide sample tables (`dust_standardized.csv`, `sample_universes.csv`) cannot be a fixed view because the number of sample columns varies; `csi_db.read_dust_standardized()` and `csi_db.read_sample_universes()` build them from the long tables. With `DROP_QC_COLUMNS = False` the QC columns are samples in the database.
+
+**Inspection copies (`preprocessing_out/inspection/`).** Every view and both wide sample tables as CSV (same names, columns and row order as the original files), and `inquire_csi_pt1.xlsx` with one sheet per table that has at most 100,000 rows (larger tables only as CSV). These are convenience copies for opening in Excel or a text editor; they are overwritten on every run and are not read by any notebook. Do not edit the database or the copies; change the inputs and re-run Part 1.
+
+**Check.** Unless `VERIFY_AGAINST_CSV = False`, Part 1 compares every view with the original CSV file cell by cell and stops if a table differs (`csi_db.verify_against_csv()`).
 
 ---
 

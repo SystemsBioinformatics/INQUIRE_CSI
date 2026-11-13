@@ -10,17 +10,17 @@ The model is explained in [method_and_limitations.md](method_and_limitations.md)
 
 ## Inputs
 
-Part 1 files are read from `data/preprocessing_out/`, the optional priors from `data/analysis_in/` (folder names set in `config.yaml`).
+The Part 1 results are read from the **SQLite database** `data/preprocessing_out/inquire_csi_pt1.sqlite` (written at the end of Part 1; see [codebook, section 2.8](codebook.md#28-sqlite-database-and-inspection-copies)), the optional priors from `data/analysis_in/` (folder names set in `config.yaml`). Part 2 no longer reads the CSV files of Part 1; they are still written and the content is identical.
 
 | File | From | Content |
 |---|---|---|
-| `preprocessing_out/databases_standardized/sources_meta_standardized.csv` | Part 1 | Names, categories and reporting classes of all sources |
-| `preprocessing_out/databases_standardized/dust_standardized.csv` | Part 1 | Sample table (used for compound names) |
-| `preprocessing_out/masked_sources/sources_masked.csv` | Part 1 | Final source database (source × compound) |
-| `preprocessing_out/masked_sources/sample_universes.csv` | Part 1 | InChIKeys detected per sample |
+| `preprocessing_out/inquire_csi_pt1.sqlite`, view `v_sources_meta_standardized` | Part 1 | Names, categories and reporting classes of all sources |
+| same database, tables `sample`, `detected_compound`, `sample_compound` (read with `csi_db.read_dust_standardized()`) | Part 1 | Sample table (used for compound names) |
+| same database, view `v_sources_masked` | Part 1 | Final source database (source × compound) |
+| same database, view `v_sample_detections` (read with `csi_db.read_sample_universes()`) | Part 1 | InChIKeys detected per sample |
 | `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` | optional, user-provided ([household_priors.md](household_priors.md)) | Household likelihoods per module; only read if `USE_GEO_PRIORS = True` |
 
-Mandatory columns are checked at the start: `source_id, source_name, source_origin, source_kind, source_general_category, source_harmonized, source_class, source_class_domain, inchikey`, `Feature Name`, and `household_id` if `USE_GEO_PRIORS = True`.
+At the start, the notebook checks that the database file exists and contains the views and tables listed above, with the mandatory columns `source_id, source_name, source_origin, source_kind, source_general_category, source_harmonized, source_class, source_class_domain, inchikey`; `household_id` is checked in the priors file if `USE_GEO_PRIORS = True`. The tables are returned by `notebooks/csi_db.py` with the same columns, values and row order as the former CSV files, so the rest of Part 2 is unchanged.
 
 ## Outputs
 
@@ -48,9 +48,9 @@ About 5 hours for ~200 samples on the test laptop (INQUIRE reference run: 05:02:
 
 **A1. Title; reset environment; imports & setup.** As in Part 1; log file `inquire_csi_pt2_analysis_and_validation_log_<yymmdd>.log`; `GLOBAL_SEED = 1`.
 
-**A2. Check columns.** Reads `config.yaml` and sets `DATA_DIR`, `PREP_OUT_DIR`, `AN_IN_DIR` and `AN_OUT_DIR` (stops if the working folder or `preprocessing_out` does not exist), the switch `USE_GEO_PRIORS` and the subfolders (`STD_DIR`, `MASK_DIR`, `GEO_DIR`, `GEO_CHECK_DIR`, `ALF_DIR`, `VAL_DIR`, `OUT_DIR`), and checks the mandatory columns.
+**A2. Check input data.** Reads `config.yaml` and sets `DATA_DIR`, `PREP_OUT_DIR`, `AN_IN_DIR` and `AN_OUT_DIR` (stops if the working folder or `preprocessing_out` does not exist), the switch `USE_GEO_PRIORS`, the database path `DB_FILE` (`preprocessing_out/inquire_csi_pt1.sqlite`; stops if it does not exist) and the subfolders (`GEO_DIR`, `GEO_CHECK_DIR`, `ALF_DIR`, `VAL_DIR`, `OUT_DIR`), and checks that the database contains the required views, tables and columns.
 
-**A3. Load inputs; load household metadata priors.** Loads the four Part 1 files. If `USE_GEO_PRIORS = True`, loads `household_metadata_priors.csv` and builds a lookup per household; otherwise the lookup stays empty and no household information is used. Sample IDs follow the pattern `LLNN[_suffix]` (`LL` = 2-letter sample code, `NN` = 2-digit sample number, `[_suffix]` is not mandatory, e.g., `FR01`, `FR01_LS2`); the function `household_key()` reduces every sample ID and `household_id` to the key `LLNN` (e.g., `FR01_LS2` → `FR01`) so that they match. IDs in another format are used unchanged (upper case). Warns if IDs in the priors file are not in the `LLNN` format or appear twice.
+**A3. Load inputs; load household metadata priors.** Loads the four Part 1 tables from the database (`sources_masked_0`, `sample_universes_0`, `sources_meta_0`, `dust_full_std_0`) and logs their numbers of rows and columns. If `USE_GEO_PRIORS = True`, loads `household_metadata_priors.csv` and builds a lookup per household; otherwise the lookup stays empty and no household information is used. Sample IDs follow the pattern `LLNN[_suffix]` (`LL` = 2-letter sample code, `NN` = 2-digit sample number, `[_suffix]` is not mandatory, e.g., `FR01`, `FR01_LS2`); the function `household_key()` reduces every sample ID and `household_id` to the key `LLNN` (e.g., `FR01_LS2` → `FR01`) so that they match. IDs in another format are used unchanged (upper case). Warns if IDs in the priors file are not in the `LLNN` format or appear twice.
 
 **A4. Lookups and inverted index.** Builds fast lookups: compound set per source (masked sources only), names and categories per source, compound names from the sample table, and the inverted index "compound → all sources containing it" (used by beam search). The optional cell *Export all source categories per origin* writes `lookups/source_categories_per_origin.csv`: every combination of origin × kind × general category with the number of sources and three example names (the basis for designing the prior tables).
 
@@ -161,8 +161,8 @@ The validation blocks (section E) take several hours and are not needed for the 
 
 | Parameter | Cell | Default | Meaning | When to change |
 |---|---|---|---|---|
-| `config.yaml` (`data_dir`, `folders`) | Check columns | `data`; `preprocessing_out`, `analysis_in`, `analysis_out` | Working folder and folder names (shared with Parts 1 and 3) | Edit `config.yaml`, not the notebook |
-| `USE_GEO_PRIORS` | Check columns | `True` | `True`: use `household_metadata_priors.csv`; `False`: no household information (geo multiplier = 1.0) | No household data available |
+| `config.yaml` (`data_dir`, `folders`) | Check input data | `data`; `preprocessing_out`, `analysis_in`, `analysis_out` | Working folder and folder names (shared with Parts 1 and 3) | Edit `config.yaml`, not the notebook |
+| `USE_GEO_PRIORS` | Check input data | `True` | `True`: use `household_metadata_priors.csv`; `False`: no household information (geo multiplier = 1.0) | No household data available |
 | `GLOBAL_SEED` | Imports & setup | 1 | Seed for alpha tuning | Robustness check with other seeds |
 | `VALIDATION_SEED` | Separate random seed | `GLOBAL_SEED + 1000` | Seed for all validation blocks | Keep different from `GLOBAL_SEED` |
 | `SOURCE_WEIGHT` | Define source weights & priors | HHP 1.0, LIT 0.8, FooDB 0.7, SPECIEUROPE 0.6, SPECIATE 0.4, CPDat 0.2 | Reliability of each database | Other databases or judgment (report it) |
@@ -207,8 +207,10 @@ The validation blocks (section E) take several hours and are not needed for the 
 |---|---|---|
 | `FileNotFoundError: Working folder not found` | `data_dir` in `config.yaml` wrong | Correct `data_dir` in `config.yaml` |
 | `FileNotFoundError: Folder not found: …preprocessing_out` | Part 1 not run, or other folder name in `config.yaml` | Run Part 1; check `config.yaml` |
+| `FileNotFoundError: Part 1 SQLite database missing` | Part 1 was run with an older version (before the database existed) or the last Part 1 cell failed | Re-run Part 1 up to and including the last cell |
+| `View v_… missing` / `Table … missing in …sqlite` | Database from another version of the pipeline | Re-run Part 1 |
 | `[geo_metadata_prior] … missing` / file not found | `USE_GEO_PRIORS = True` but no priors file in `<data_dir>/analysis_in/geo_metadata_outputs/` | Add the file ([household_priors.md](household_priors.md)) or set `USE_GEO_PRIORS = False` |
-| `[sources_meta] missing columns: ['source_class', …]` | Part 1 outputs from an older pipeline version | Re-run Part 1 |
+| `v_sources_masked missing required columns` (or `v_sources_meta_standardized …`) | Database from an older pipeline version | Re-run Part 1 |
 | Warning: modules in file but not in `MODULE_WEIGHT` (or vice versa) | Priors file and Part 2 module lists differ | Add the module to `MODULE_WEIGHT` and `MODULE_SOURCE_MAP` (weight 0 to ignore it) |
 | Warning: label does not fire | A label in `MODULE_SOURCE_MAP` matches no source | Check spelling against `analysis_out/lookups/source_categories_per_origin.csv` |
 | `NameError: best_alpha` / `PRIOR_STRENGTH` | Cells run out of order | Restart the kernel and run all cells from the top (or follow "Running without validation") |

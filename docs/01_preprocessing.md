@@ -8,7 +8,8 @@ Part 1 prepares all data for the source identification in Part 2. It
 3. builds one lookup table of all compounds of all source databases (InChIKey, names, CAS numbers, DTXSIDs),
 4. merges sources that contain exactly the same compounds (so that the optimization does not have to choose between identical sources),
 5. keeps only the compounds that actually occur in the samples ("masking") and merges sources that become identical after masking,
-6. converts the sample data into one **compound universe** per sample (the list of InChIKeys detected in that sample).
+6. converts the sample data into one **compound universe** per sample (the list of InChIKeys detected in that sample),
+7. stores all results in one **SQLite database** (input of Part 2) and writes CSV/Excel copies for inspection.
 
 ## Inputs
 
@@ -44,8 +45,10 @@ All outputs are written to `data/preprocessing_out/` (created automatically; pat
 | `masked_sources/counts_masked.csv`, `valid_sources_masked.csv` | Rows (compounds) per source before the last filter; retained sources | QC |
 | `masked_sources/sample_universes.csv` | InChIKeys detected per sample (one column per sample) | **Part 2** |
 | `lookups/source_class_unmapped.csv`, `source_class_unmapped_std_dbs.csv` | Category keys missing from the mapping file (only written if there are any) | QC |
+| **`inquire_csi_pt1.sqlite`** | SQLite database with all Part 1 results except the raw per-database copies (normalized tables and views that reproduce the CSV files; see [codebook, section 2.8](codebook.md#28-sqlite-database-and-inspection-copies) and [schema.sql](schema.sql)) | **Part 2** |
+| `inspection/*.csv`, `inspection/inquire_csi_pt1.xlsx` | Read-only CSV copies of all database views and sample tables, and an Excel workbook (tables up to 100,000 rows) | inspection |
 
-All columns are explained in the [codebook](codebook.md).
+The CSV files in the table that are marked for Part 2 are still written, but **Part 2 now reads the same content from the database**. All columns are explained in the [codebook](codebook.md).
 
 ## Runtime
 
@@ -106,6 +109,8 @@ The next two cells print column statistics before and after aggregation and save
 
 **15. Save sample universes.** Writes `masked_sources/sample_universes.csv`: one row per InChIKey found in any sample, one column per sample; a cell contains the InChIKey if detected in that sample, otherwise `NA`.
 
+**16. Build the SQLite database and the inspection copies.** Imports `notebooks/csi_db.py` and builds `inquire_csi_pt1.sqlite` from the CSV files written in the previous steps (schema in [schema.sql](schema.sql); tables and views in [codebook, section 2.8](codebook.md#28-sqlite-database-and-inspection-copies)). Every source, compound and sample value is stored once; the three flat source tables (standardized, aggregated, masked) become one `source_compound` table with the flags `in_aggregated` and `in_masked`. The database is written to a temporary file and renamed at the end, so an interrupted run never leaves a half-built database. The same cell writes a CSV copy of every view to `inspection/` and, with `EXPORT_EXCEL = True`, one Excel workbook; with `VERIFY_AGAINST_CSV = True` it compares every view with the original CSV file cell by cell and stops with an error if one differs. The raw per-database copies (`databases_id_w_suffix/`, `<database>_standardized.csv`) are kept as files only. Only Part 1 results are in the database; Part 2 still writes CSV files.
+
 ---
 
 ## User-settable parameters
@@ -131,6 +136,9 @@ The next two cells print column statistics before and after aggregation and save
 | `dust_cols_drop` | Reshape sample data | `7S_CS_01` … `7S_CS_04`, `Blank_NIST` (example) | Names of blank/QC sample columns | **Always** replace with your own blank/QC columns |
 | `DROP_QC_COLUMNS` | Reshape sample data | `True` | `True` removes the columns in `dust_cols_drop` and saves `dust_standardized.csv`. `False` keeps them; they are then analyzed as samples, and the sample table is saved as `dust_standardized_qc_cols.csv` (see note) | `False` only to inspect blanks on purpose |
 | `REAGGREGATE_AFTER_MASKING` | Mask products/sources | `True` | Second aggregation after masking | `False` only as a check |
+| `EXPORT_EXCEL` | Build SQLite database | `True` | Also write `inspection/inquire_csi_pt1.xlsx` (tables with more than 100,000 rows are CSV only; `excel_max_rows` in `csi_db.export_all`) | `False` for faster runs with large databases |
+| `VERIFY_AGAINST_CSV` | Build SQLite database | `True` | Check that every database view equals its original CSV file | `False` only to save time on large runs |
+| `DB_FILE`, `INSPECT_DIR` | Build SQLite database | `PREP_OUT_DIR/inquire_csi_pt1.sqlite`, `PREP_OUT_DIR/inspection` | Location of the database and the inspection copies | – |
 
 **NB!** With `DROP_QC_COLUMNS = False`, Part 1 writes `dust_standardized_qc_cols.csv`, but Part 2 reads `dust_standardized.csv` (only used for compound names). Part 2 then uses an older `dust_standardized.csv` if one exists, or stops if none exists. The sample universes, which Part 2 analyzes, always follow the setting.
 
@@ -147,6 +155,7 @@ The next two cells print column statistics before and after aggregation and save
 | Standardize | Number of FooDB semi-duplicates removed; unified source rows and unique source IDs | Large unexpected changes → check input |
 | Reporting classes | "all_sources_0 mapped to a source_class"; no "Unmapped Sources" warnings | Unmapped keys → add them to the mapping file (see `preprocessing_out/lookups/source_class_unmapped.csv`) |
 | Standardize source metadata | "rows → … unique sources saved"; no warning about sources with more than one metadata row | A warning means one `source_id` carries different names or categories in the input; the first row is kept |
+| SQLite database | Rows per table in the log; every file "identical" in the comparison | "DIFFERENT" stops the run: the database does not reproduce that CSV file, report it (do not use the database) |
 | All-compounds lookup | Number of compounds and how many have a name, CAS and DTXSID; warnings about missing columns; junk, corrected and non-standard InChIKeys (same as in the InChIKey cleanup) | Missing columns are expected if your source files lack them; many corrected or non-standard keys → check the InChIKeys in the input |
 | Aggregation | Reduction per origin; largest equivalence groups; "Equality check … True" for members of one group | The largest groups are typically CPDat products with one compound and "Unknown" category |
 | Reshape sample data | "No blank/QC columns left" and **number of samples** | Must equal the number of real samples |

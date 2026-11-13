@@ -131,7 +131,9 @@ INQUIRE_CSI/
     │   ├── SPECIATE.xlsx
     │   ├── SPECIEUROPE.xlsx
     │   └── lookups/source_class_mapping.xlsx   ← reporting classes (from Zenodo)
-    ├── preprocessing_out/                  ← Part 1 outputs (read by Part 2)
+    ├── preprocessing_out/                  ← Part 1 outputs
+    │   ├── inquire_csi_pt1.sqlite          ← SQLite database (read by Part 2)
+    │   ├── inspection/                     ← CSV and Excel copies of the database tables (not read by any notebook)
     │   ├── databases_id_w_suffix/
     │   ├── databases_standardized/
     │   ├── all_sources_aggregated/
