@@ -6,3 +6,6 @@ data/*
 *.log
 .ipynb_checkpoints/
 __pycache__/
+
+# Ignore editor configurations
+.vscode/
