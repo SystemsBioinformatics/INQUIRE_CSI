@@ -20,7 +20,8 @@ flowchart LR
     S[Contaminant source databases<br/>own household products, literature products,<br/>CPDat, FooDB, SPECIATE, SPECIEUROPE] --> P1[Part 1<br/>INQUIRE_CSI_Pt1_Preprocessing]
     D[Sample data<br/>InChIKeys per sample] --> P1
     C[config.yaml<br/>data_dir + folder names] -.-> P1
-    P1 -->|preprocessing_out/<br/>master contaminant source DB<br/>+ compounds per sample| P2[Part 2<br/>INQUIRE_CSI_Pt2_Analysis_and_Validation<br/>source identification + validation]
+    P1 -->|preprocessing_out/inquire_csi_pt1.sqlite<br/>SQLite database: master contaminant source DB<br/>+ compounds per sample| P2[Part 2<br/>INQUIRE_CSI_Pt2_Analysis_and_Validation<br/>source identification + validation]
+    P1 -.->|preprocessing_out/inspection/<br/>CSV + Excel copies| I[For inspection only]
     H[Optional: household priors<br/>analysis_in/geo_metadata_outputs/<br/>household_metadata_priors.csv] --> P2
     P2 -->|analysis_out/set_cover_outputs/<br/>cover_results_all_samples_beam.csv| P3[Part 3, optional<br/>INQUIRE_CSI_Pt3_Visualization]
     P3 --> F[visualization_out/<br/>Heatmaps, Sankey, 3D networks]
@@ -28,7 +29,7 @@ flowchart LR
 
 | Part | Notebook | What it does | Typical runtime* |
 |---|---|---|---|
-| 1 | `INQUIRE_CSI_Pt1_Preprocessing.ipynb` | Cleans and harmonizes the sample data and all source databases into one master contaminant source database (MCSDB); adds reporting classes; merges duplicate sources; keeps only compounds found in the samples | 00:13:39 |
+| 1 | `INQUIRE_CSI_Pt1_Preprocessing.ipynb` | Cleans and harmonizes the sample data and all source databases into one master contaminant source database (MCSDB); adds reporting classes; merges duplicate sources; keeps only compounds found in the samples; stores the results in a SQLite database (read by Part 2) with CSV/Excel copies for inspection | 00:13:39 |
 | 2 | `INQUIRE_CSI_Pt2_Analysis_and_Validation.ipynb` – Contaminant Source Analysis and Validation | Source identification per sample (greedy + beam search set cover with priors) and a full validation suite | 05:02:00 |
 | 3 | `INQUIRE_CSI_Pt3_Visualization.ipynb` (optional) | Figures of the best cover per sample: sample-group × source-category heatmaps (sample group = first two letters of the sample ID, e.g., country), Sankey diagram, interactive 3D networks | 00:12:13 |
 
@@ -49,7 +50,8 @@ INQUIRE_CSI/
 ├── notebooks/
 │   ├── INQUIRE_CSI_Pt1_Preprocessing.ipynb
 │   ├── INQUIRE_CSI_Pt2_Analysis_and_Validation.ipynb
-│   └── INQUIRE_CSI_Pt3_Visualization.ipynb
+│   ├── INQUIRE_CSI_Pt3_Visualization.ipynb
+│   └── csi_db.py                helper for the Part 1 SQLite database (build, read, export, verify)
 ├── example_data/               synthetic example data for testing, mirrors the input folders of data/ (see example_data/README.md)
 ├── data/                       working folder (inputs in preprocessing_in/ and analysis_in/; outputs in preprocessing_out/, analysis_out/, visualization_out/); see data/README.md
 └── docs/
@@ -60,7 +62,8 @@ INQUIRE_CSI/
     ├── 02_analysis_and_validation.md    Part 2
     ├── 03_visualization.md              Part 3
     ├── parameters.md                    all user-settable parameters in one place
-    ├── codebook.md                      every output file and the meaning of every column
+    ├── codebook.md                      every output file and the meaning of every column (incl. the SQLite database)
+    ├── schema.sql                       definition of the Part 1 SQLite database (tables and views)
     └── method_and_limitations.md        model, validation, reference-run results, limitations
 ```
 
