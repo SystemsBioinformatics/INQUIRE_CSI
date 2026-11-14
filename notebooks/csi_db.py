@@ -22,8 +22,10 @@ from __future__ import annotations
 import io
 import os
 import sqlite3
+import warnings
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 SCHEMA_FILE = Path(__file__).resolve().parent.parent / "docs" / "schema.sql"
@@ -105,12 +107,11 @@ def read_sample_universes(con, na_value=float("nan")) -> pd.DataFrame:
     one column per sample; the InChIKey if detected (> 0), otherwise `na_value`."""
     samples = [r[0] for r in con.execute("SELECT sample_id FROM sample ORDER BY position")]
     det = read_view(con, "sample_detections")
-    keys = sorted(det["inchikey"].unique())
-    out = pd.DataFrame({"inchikey": keys})
-    for s in samples:
-        present = set(det.loc[det["sample_id"] == s, "inchikey"])
-        out[s] = [k if k in present else na_value for k in keys]
-    return out
+    keys = pd.Index(sorted(det["inchikey"].unique()))
+    present = np.zeros((len(keys), len(samples)), dtype=bool)
+    present[keys.get_indexer(det["inchikey"]), pd.Index(samples).get_indexer(det["sample_id"])] = True
+    values = np.where(present, keys.to_numpy(dtype=object)[:, None], na_value)
+    return pd.concat([pd.DataFrame({"inchikey": keys}), pd.DataFrame(values, columns=samples)], axis=1)
 
 
 # ----------------------------------------------------------------------------- build
@@ -181,11 +182,16 @@ def build_database(prep_out_dir, sample_file, db_path=None, schema_file=SCHEMA_F
                 "masked_hash": _null(mk["masked_hash"]), "hh_household": _null(mk["hh_household"])}))
 
         # samples (long format)
-        dust = pd.read_csv(sample_file, low_memory=False)
+        dust = pd.read_csv(sample_file, low_memory=False, float_precision="round_trip")  # exact floats
+        # Sample columns = all columns after "Concentration Type"; of the leading columns only
+        # the 4 required metadata columns are kept (any extra leading columns are ignored)
+        missing = [c for c in SAMPLE_META_COLS if c not in dust.columns]
+        if missing:
+            raise ValueError(f"Required columns missing in {sample_file}: {missing}")
         start = list(dust.columns).index("Concentration Type") + 1
         sample_cols = list(dust.columns[start:])
-        if list(dust.columns[:start]) != SAMPLE_META_COLS:
-            raise ValueError(f"Unexpected leading columns in {sample_file}: {list(dust.columns[:start])}")
+        dust = dust[SAMPLE_META_COLS + sample_cols]
+        dust = aggregate_duplicate_inchikeys(dust, log)
         _append(con, "sample", pd.DataFrame({"sample_id": sample_cols, "position": range(len(sample_cols))}))
         det = dust[SAMPLE_META_COLS].copy()
         det.columns = ["inchikey", "feature_name", "compound_class", "concentration_type"]
@@ -209,6 +215,32 @@ def build_database(prep_out_dir, sample_file, db_path=None, schema_file=SCHEMA_F
     log(f" - SQLite database written: {db_path} ({db_path.stat().st_size / 1e6:.1f} MB)")
     log(" - Rows per table: " + ", ".join(f"{t}={n:,}" for t, n in counts.items()))
     return db_path
+
+
+def aggregate_duplicate_inchikeys(dust, log=_log):
+    """Warn about rows of the sample table that share an InChIKey and merge them into one row
+    (at the position of the first one): concentrations of the sample columns (all columns after
+    "Concentration Type") are summed (a sample stays empty if all merged rows are empty), feature
+    names are joined with MULTI_SEP, all other columns come from the first row. All columns are kept."""
+    dup = dust.loc[dust["inchikey"].notna() & dust["inchikey"].duplicated(keep=False)]
+    if dup.empty:
+        return dust
+    cols = list(dust.columns)
+    sample_cols = cols[cols.index("Concentration Type") + 1:]
+    names = dup.groupby("inchikey", sort=False)["Feature Name"].agg(lambda s: " | ".join(map(str, s)))
+    msg = (f"{len(names)} InChIKey(s) occur in more than one row of the sample table. Rows with the "
+           f"same InChIKey are aggregated by summing the concentrations and joining the feature names "
+           f"(\"{MULTI_SEP.strip()}\"):\n" + "\n".join(f"   {k}: {v}" for k, v in names.items()))
+    warnings.warn(msg, UserWarning, stacklevel=3)
+    log(" - WARNING: " + msg)
+    has_key = dust["inchikey"].notna()
+    keep, rest = dust[has_key], dust[~has_key]
+    grp = keep.groupby("inchikey", sort=False)
+    other = [c for c in cols if c not in sample_cols and c not in ("inchikey", "Feature Name")]
+    out = pd.concat([grp[other].first(),
+                     grp["Feature Name"].agg(lambda s: MULTI_SEP.join(dict.fromkeys(str(x) for x in s.dropna()))),
+                     grp[sample_cols].sum(min_count=1)], axis=1).reset_index()[cols]
+    return pd.concat([out, rest], ignore_index=True)
 
 
 def _append(con, table, df):
@@ -281,6 +313,9 @@ def verify_against_csv(db_path, prep_out_dir, sample_file, log=_log) -> pd.DataF
         buf.seek(0)
         new = pd.read_csv(buf, dtype=str, keep_default_na=False)
         old = _read_str(path)
+        if name == "dust_standardized":  # the CSV may have extra leading columns; the database keeps 4 + samples
+            cols = list(old.columns)
+            old = old[SAMPLE_META_COLS + cols[cols.index("Concentration Type") + 1:]]
         if list(new.columns) != list(old.columns) or new.shape != old.shape:
             status = "DIFFERENT (columns or row count)"
         elif new.equals(old):
