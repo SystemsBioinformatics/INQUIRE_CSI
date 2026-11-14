@@ -26,7 +26,7 @@ This codebook lists every file the pipeline writes and explains its columns. All
 | | `household_products_standardized.csv`, `lit_consumer_products_standardized.csv`, `foodb_standardized.csv`, `specieurope_standardized.csv`, `speciate_standardized.csv`, `cpdat_*_standardized.csv` | Part 1 | – | 2.3 |
 | | `all_compounds_standardized.csv` | Part 1 | – (reference) | 2.3 |
 | | `equivalence_groups_members.csv`, `equivalence_groups_summary.csv` | Part 1 | – | 2.4 |
-| | **`dust_standardized.csv`** (or `dust_standardized_qc_cols.csv`) | Part 1 | Part 2 (via database) | 2.5 |
+| | **`samples_standardized.csv`** (or `samples_standardized_qc_cols.csv`) | Part 1 | Part 2 (via database) | 2.5 |
 | `preprocessing_out/all_sources_aggregated/` | `all_sources_aggregated.csv` | Part 1 | – | 2.2 |
 | `preprocessing_out/masked_sources/` | **`sources_masked.csv`** | Part 1 | Part 2 (via database) | 2.2 |
 | | `masked_equivalence_groups_members.csv` | Part 1 | – | 2.4 |
@@ -109,7 +109,7 @@ Each database on its own after renaming to the harmonized schema, with all origi
 | `masked_hash` | Fingerprint of the masked compound set (identical within a group) |
 
 ### 2.5 Sample tables
-`dust_standardized.csv`: the sample table (`inchikey`, `Feature Name`, `Class`, `Concentration Type`, one column per sample) after removing rows without InChIKey and blank/QC columns. With `DROP_QC_COLUMNS = False` it is saved as `dust_standardized_qc_cols.csv` instead.
+`samples_standardized.csv`: the sample table (`inchikey`, `Feature Name`, `Class`, `Concentration Type`, one column per sample) after removing rows without InChIKey and blank/QC columns. With `DROP_QC_COLUMNS = False` it is saved as `samples_standardized_qc_cols.csv` instead.
 
 `sample_universes.csv`: one row per InChIKey detected in any sample (`inchikey`) and one column per sample; a cell contains the InChIKey if the compound was detected (value > 0) in that sample, otherwise `NA`.
 
@@ -148,7 +148,7 @@ Each database on its own after renaming to the harmonized schema, with all origi
 | `v_counts_masked`, `v_valid_sources_masked` | `counts_masked.csv`, `valid_sources_masked.csv` (2.6) |
 | `v_sample_detections` | new: long format of the sample universes (`sample_id`, `inchikey` with concentration > 0) |
 
-The two wide sample tables (`dust_standardized.csv`, `sample_universes.csv`) cannot be a fixed view because the number of sample columns varies; `csi_db.read_dust_standardized()` and `csi_db.read_sample_universes()` build them from the long tables. With `DROP_QC_COLUMNS = False` the QC columns are samples in the database.
+The two wide sample tables (`samples_standardized.csv`, `sample_universes.csv`) cannot be a fixed view because the number of sample columns varies; `csi_db.read_samples_standardized()` and `csi_db.read_sample_universes()` build them from the long tables. With `DROP_QC_COLUMNS = False` the QC columns are samples in the database.
 
 **Inspection copies (`preprocessing_out/inspection/`).** Every view and both wide sample tables as CSV (same names, columns and row order as the original files), and `inquire_csi_pt1.xlsx` with one sheet per table that has at most 100,000 rows (larger tables only as CSV). These are convenience copies for opening in Excel or a text editor; they are overwritten on every run and are not read by any notebook. Do not edit the database or the copies; change the inputs and re-run Part 1.
 

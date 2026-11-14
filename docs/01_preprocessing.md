@@ -36,7 +36,7 @@ All outputs are written to `data/preprocessing_out/` (created automatically; pat
 | `databases_standardized/all_sources_standardized.csv` | All sources in the harmonized schema incl. `source_class`, `source_class_domain`; one row per source × compound (before aggregation) | traceability, Zenodo |
 | `databases_standardized/sources_meta_standardized.csv` | Metadata (name, origin, kind, category, harmonized label, class, class domain) of **all** sources; one row per source | **Part 2** |
 | `databases_standardized/all_compounds_standardized.csv` | One row per compound (InChIKey) of all source databases: preferred name, all names, CAS numbers, DTXSIDs | reference, Zenodo |
-| `databases_standardized/dust_standardized.csv` | Sample table after removing rows without InChIKey and blank/QC columns | **Part 2** (compound names) |
+| `databases_standardized/samples_standardized.csv` | Sample table after removing rows without InChIKey and blank/QC columns | **Part 2** (compound names) |
 | `databases_standardized/<database>_standardized.csv` | Each database separately in the harmonized schema (with class columns where possible); only written if `EXPORT_TRACE_TABLES = True` | traceability, Zenodo |
 | `databases_standardized/equivalence_groups_members.csv`, `equivalence_groups_summary.csv` | First aggregation: which sources were merged into which representative | traceability |
 | `all_sources_aggregated/all_sources_aggregated.csv` | Source database after the first aggregation | traceability, Zenodo |
@@ -103,7 +103,7 @@ The tables to clean are set in `INCHIKEY_DFS`, the possible names of the InChIKe
 
 The next two cells print column statistics before and after aggregation and save `all_sources_aggregated/all_sources_aggregated.csv`.
 
-**13. Reshape sample data and build per-sample compound universes.** Removes rows without InChIKey; if `DROP_QC_COLUMNS = True`, removes the blank/QC columns listed in `dust_cols_drop` (and warns if a column containing "blank" or starting with "7S_CS" remains) and saves `dust_standardized.csv`. Then builds, for every sample column (all columns right of `Concentration Type`), the sorted list of InChIKeys with a value > 0: the **compound universe** of that sample.
+**13. Reshape sample data and build per-sample compound universes.** Removes rows without InChIKey; if `DROP_QC_COLUMNS = True`, removes the blank/QC columns listed in `dust_cols_drop` (and warns if a column containing "blank" or starting with "7S_CS" remains) and saves `samples_standardized.csv`. Then builds, for every sample column (all columns right of `Concentration Type`), the sorted list of InChIKeys with a value > 0: the **compound universe** of that sample.
 
 **14. Mask sources to sample compounds and second aggregation.** Removes from every source all compounds that do not occur in **any** sample; sources left without compounds are dropped. After masking, many sources become identical again (e.g., two CPDat products that differed only in compounds never found in the samples). With `REAGGREGATE_AFTER_MASKING = True` they are merged with the same rules as in step 12. **Own household products with different sample keys are never merged** (key `LLNN` read from the product ID `LLNN_CPnn_HHP`), because Part 2 needs each product's key to prefer it for the samples with the same key. The masked database, merge table, counts and list of valid sources are saved in `masked_sources/`.
 
@@ -134,14 +134,14 @@ The next two cells print column statistics before and after aggregation and save
 | `MULTI_SEP` | Save all compounds | `"; "` | Separator between several values in one cell | – |
 | `GROUP_META_COLS` | Aggregate equivalent products/sources | kind, general category, harmonized label | Columns that must be identical for two sources to be merged (in addition to origin and compound set) | Not recommended (categories would be lost) |
 | `dust_cols_drop` | Reshape sample data | `7S_CS_01` … `7S_CS_04`, `Blank_NIST` (example) | Names of blank/QC sample columns | **Always** replace with your own blank/QC columns |
-| `DROP_QC_COLUMNS` | Reshape sample data | `True` | `True` removes the columns in `dust_cols_drop` and saves `dust_standardized.csv`. `False` keeps them; they are then analyzed as samples, and the sample table is saved as `dust_standardized_qc_cols.csv` (see note) | `False` only to inspect blanks on purpose |
+| `DROP_QC_COLUMNS` | Reshape sample data | `True` | `True` removes the columns in `dust_cols_drop` and saves `samples_standardized.csv`. `False` keeps them; they are then analyzed as samples, and the sample table is saved as `samples_standardized_qc_cols.csv` (see note) | `False` only to inspect blanks on purpose |
 | `REAGGREGATE_AFTER_MASKING` | Mask products/sources | `True` | Second aggregation after masking | `False` only as a check |
 | `EXPORT_EXCEL` | Build SQLite database | `True` | Also write `inspection/inquire_csi_pt1.xlsx` (tables with more than 100,000 rows are CSV only; `excel_max_rows` in `csi_db.export_all`) | `False` for faster runs with large databases |
 | `VERIFY_AGAINST_CSV` | Build SQLite database | `True` | Check that every database view equals its original CSV file | `False` only to save time on large runs |
 | `EXPORT_TRACE_TABLES` | Working copies and ID suffixes | `True` | `True` also writes the per-database traceability files `databases_id_w_suffix/*.csv`, `databases_standardized/<database>_standardized.csv` and `cpdat_*_standardized.csv` (traceability, Zenodo); they are not read by the SQLite database or Part 2. The other files in `databases_standardized/` are always written | `False` to save time and disk space |
 | `DB_FILE`, `INSPECT_DIR` | Build SQLite database | `PREP_OUT_DIR/inquire_csi_pt1.sqlite`, `PREP_OUT_DIR/inspection` | Location of the database and the inspection copies | – |
 
-**NB!** With `DROP_QC_COLUMNS = False`, Part 1 writes `dust_standardized_qc_cols.csv`, but Part 2 reads `dust_standardized.csv` (only used for compound names). Part 2 then uses an older `dust_standardized.csv` if one exists, or stops if none exists. The sample universes, which Part 2 analyzes, always follow the setting.
+**NB!** With `DROP_QC_COLUMNS = False`, Part 1 writes `samples_standardized_qc_cols.csv`, but Part 2 reads `samples_standardized.csv` (only used for compound names). Part 2 then uses an older `samples_standardized.csv` if one exists, or stops if none exists. The sample universes, which Part 2 analyzes, always follow the setting.
 
 ---
 

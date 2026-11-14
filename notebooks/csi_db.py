@@ -97,7 +97,7 @@ def _sample_matrix(con) -> pd.DataFrame:
     return pd.concat([meta, wide], axis=1)
 
 
-def read_dust_standardized(con) -> pd.DataFrame:
+def read_samples_standardized(con) -> pd.DataFrame:
     """Same content as dust_standardized.csv."""
     return _sample_matrix(con)
 

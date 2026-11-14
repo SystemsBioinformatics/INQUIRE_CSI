@@ -15,7 +15,7 @@ The Part 1 results are read from the **SQLite database** `data/preprocessing_out
 | File | From | Content |
 |---|---|---|
 | `preprocessing_out/inquire_csi_pt1.sqlite`, view `v_sources_meta_standardized` | Part 1 | Names, categories and reporting classes of all sources |
-| same database, tables `sample`, `detected_compound`, `sample_compound` (read with `csi_db.read_dust_standardized()`) | Part 1 | Sample table (used for compound names) |
+| same database, tables `sample`, `detected_compound`, `sample_compound` (read with `csi_db.read_samples_standardized()`) | Part 1 | Sample table (used for compound names) |
 | same database, view `v_sources_masked` | Part 1 | Final source database (source × compound) |
 | same database, view `v_sample_detections` (read with `csi_db.read_sample_universes()`) | Part 1 | InChIKeys detected per sample |
 | `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` | optional, user-provided ([household_priors.md](household_priors.md)) | Household likelihoods per module; only read if `USE_GEO_PRIORS = True` |
