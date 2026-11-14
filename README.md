@@ -77,7 +77,7 @@ INQUIRE_CSI/
    conda activate inquire_csi
    ```
 2. **Get the input data:**
-   - **Source databases and the source class mapping:** create `data/preprocessing_in/` and copy the files into it (mapping file into `data/preprocessing_in/lookups/`).
+   - **Source databases and the source class mapping:** create `data/preprocessing_in/source_databases/` (fixed name) and copy the source database files into it (mapping file into `data/preprocessing_in/lookups/`).
    - **Sample data:** use your own, or the synthetic test data from `example_data/` (see [data/README.md](data/README.md)).
    - **To test the pipeline first**, copy the folders `example_data/preprocessing_in/` and `example_data/analysis_in/` into `data/` instead: it contains synthetic sample data, household priors and small example versions of all source databases and of the mapping file (see [example_data/README.md](example_data/README.md)).
 3. **Start JupyterLab** from the repository folder: `jupyter lab`.

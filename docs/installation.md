@@ -111,7 +111,7 @@ Python standard-library modules (no installation needed): `pathlib`, `re`, `time
 
 ## 4. Folder structure
 
-Keep the repository structure; then the default working folder (`data_dir: data` in `config.yaml`, i.e., the `data` folder next to `notebooks`) works without changes. The output folders are named `preprocessing_out`, `analysis_out` and `visualization_out` and are created automatically. The input folder `preprocessing_in/` must exist before Part 1 is run.
+Keep the repository structure; then the default working folder (`data_dir: data` in `config.yaml`, i.e., the `data` folder next to `notebooks`) works without changes. The output folders are named `preprocessing_out`, `analysis_out` and `visualization_out` and are created automatically. The input folder `preprocessing_in/` and its subfolder `source_databases/` (fixed name) must exist before Part 1 is run.
 
 ```
 INQUIRE_CSI/
@@ -123,13 +123,14 @@ INQUIRE_CSI/
 └── data/                                   ← working folder (data_dir)
     ├── preprocessing_in/                   ← Part 1 inputs (you create/copy)
     │   ├── Sample_Data.xlsx                ← your samples or example data
-    │   ├── Own_Household_Products.csv      ← source databases (from Zenodo)
-    │   ├── Own_Household_Products_Metadata.csv
-    │   ├── Literature_Products.csv
-    │   ├── CPDat/                          ← 3 .tsv files
-    │   ├── FooDB.csv
-    │   ├── SPECIATE.xlsx
-    │   ├── SPECIEUROPE.xlsx
+    │   ├── source_databases/               ← fixed name; source databases (from Zenodo)
+    │   │   ├── Own_Household_Products.csv
+    │   │   ├── Own_Household_Products_Metadata.csv
+    │   │   ├── Literature_Products.csv
+    │   │   ├── CPDat/                      ← 3 .tsv files
+    │   │   ├── FooDB.csv
+    │   │   ├── SPECIATE.xlsx
+    │   │   └── SPECIEUROPE.xlsx
     │   └── lookups/source_class_mapping.xlsx   ← reporting classes (from Zenodo)
     ├── preprocessing_out/                  ← Part 1 outputs
     │   ├── inquire_csi_pt1.sqlite          ← SQLite database (read by Part 2)

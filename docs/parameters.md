@@ -23,7 +23,7 @@ The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old ha
 
 | Parameter | Cell | Default | Change when |
 |---|---|---|---|
-| `PREP_IN_DIR`, `PREP_OUT_DIR`, `LOOKUP_IN_DIR` | Configuration | `<data_dir>/preprocessing_in`, `<data_dir>/preprocessing_out`, `PREP_IN_DIR/lookups` | Set via `config.yaml`, not in the notebook |
+| `PREP_IN_DIR`, `PREP_OUT_DIR`, `LOOKUP_IN_DIR`, `SOURCE_DB_DIR` | Configuration | `<data_dir>/preprocessing_in`, `<data_dir>/preprocessing_out`, `PREP_IN_DIR/lookups`, `PREP_IN_DIR/source_databases` (fixed name, must exist) | Set via `config.yaml`, not in the notebook |
 | Input file names | Check columns / Load raw input data | see [input_data.md](input_data.md) | Other files |
 | `GLOBAL_SEED` | Imports & setup | 1 | – |
 | `ENCODINGS` | Imports & setup | utf-8, utf-8-sig, cp1252, cp1250, latin1 | Unusual file encodings |

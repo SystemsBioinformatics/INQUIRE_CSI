@@ -13,7 +13,7 @@ Part 1 prepares all data for the source identification in Part 2. It
 
 ## Inputs
 
-From `data/preprocessing_in/` (set by `config.yaml`; the folder must exist, otherwise Part 1 stops with an error); formats and mandatory columns in [input_data.md](input_data.md):
+From `data/preprocessing_in/` (set by `config.yaml`; the folder must exist, otherwise Part 1 stops with an error). The source database files must be in the fixed subfolder `source_databases/` inside it; formats and mandatory columns in [input_data.md](input_data.md):
 
 | Input | File |
 |---|---|
@@ -168,6 +168,7 @@ The next two cells print column statistics before and after aggregation and save
 |---|---|---|
 | `FileNotFoundError: Working folder not found` | `data_dir` in `config.yaml` wrong | Correct `data_dir` in `config.yaml` |
 | `FileNotFoundError: Input folder not found` | `data/preprocessing_in/` does not exist | Create it and copy the input files into it |
+| `FileNotFoundError: Source database folder not found` | `data/preprocessing_in/source_databases/` does not exist | Create it (exact name) and copy the source database files into it |
 | `ValueError: [<dataset>] missing columns: …` | Column names in the input differ from the expected ones | Rename the columns in the input file (case-sensitive) or adapt the check and the mapping cell |
 | `[source_class mapping] missing columns` | The mapping sheet is not the first sheet, or columns are missing | Make `source_class_mapping` the first sheet; check the six columns |
 | `source_class mapping has … rows with the same key but different classes` | Duplicate keys with conflicting classes in the mapping file | Keep one class per key |

@@ -1,6 +1,6 @@
 # Input data: files, formats and mandatory columns
 
-All Part 1 input files go into `data/preprocessing_in/` and the optional household priors into `data/analysis_in/` (folder names and location of `data/` are set in `config.yaml`; `preprocessing_in/` must exist before Part 1 is run). Paths in this document are relative to these two folders. The three output folders are named `preprocessing_out`, `analysis_out` and `visualization_out`. File names are set in the data-loading cells of each notebook. If your files have other names, change them there (search for `safe_read_csv(`, `safe_read_excel(`, and `check_cols_before_load(`).
+All Part 1 input files go into `data/preprocessing_in/` and the optional household priors into `data/analysis_in/` (folder names and location of `data/` are set in `config.yaml`; `preprocessing_in/` must exist before Part 1 is run). The source database files (section 2) go into the fixed subfolder `preprocessing_in/source_databases/`, which must also exist. Paths in this document are relative to these two folders. The three output folders are named `preprocessing_out`, `analysis_out` and `visualization_out`. File names are set in the data-loading cells of each notebook. If your files have other names, change them there (search for `safe_read_csv(`, `safe_read_excel(`, and `check_cols_before_load(`).
 
 Each notebook first checks the **header row** of every input file for the mandatory columns (cell *Check if necessary columns exist…*). It stops with a clear error message if a column is missing. Column names are case-sensitive. Leading/trailing spaces in column names and in key text columns are removed automatically (Part 1, *Whitespace cleanup*). InChIKeys of all source databases and of the sample data are also cleaned automatically: converted to upper case, placeholders and numbers set to missing, and a digit "0" replaced by the letter "O" (Part 1, *InChIKey cleanup*).
 
@@ -48,13 +48,13 @@ The six source data sets are combined into one master contaminant source databas
 
 **Presence/absence only.** The MCSDB records only *which* compounds occur in a source, not how much (no concentrations or weight fractions). The intermediate, cleaned versions of the public databases contain quantitative information where the original database provides it (section 2.7), but they are not redistributed here because of license terms (e.g., non-commercial use, redistribution needs permission). Users can rebuild the databases from the official releases with the cleanup pipelines listed in section 2.7, including concentrations/weight fractions (when available) for, e.g., clustering or multivariate analysis.
 
-**Example files.** `example_data/preprocessing_in/` contains small versions of all six source databases (60 sources each; mostly synthetic, plus a few real rows) in exactly the formats described below, with the same file names and subfolders. Use them to test the pipeline or as templates for adding your own sources ([example_data/README.md](../example_data/README.md)).
+**Example files.** `example_data/preprocessing_in/` contains small versions of all six source databases (60 sources each; mostly synthetic, plus a few real rows) in exactly the formats described below, with the same file names and subfolders (inside `preprocessing_in/source_databases/`). Use them to test the pipeline or as templates for adding your own sources ([example_data/README.md](../example_data/README.md)).
 
 ### 2.1 Own analyzed household products – origin `HOUSEHOLD_PRODUCTS`
 
 | | |
 |---|---|
-| Files | `Own_Household_Products.csv` (compounds per product); `Own_Household_Products_Metadata.csv` (product metadata) |
+| Files | `source_databases/Own_Household_Products.csv` (compounds per product); `Own_Household_Products_Metadata.csv` (product metadata) |
 | Format | CSV, comma-separated, UTF-8 |
 | Mandatory columns – products file | `MySysID`, `Brand-free Name`, `Feature_Name`, `InChIKey`; `source_kind`, `source_general_category`, `puc_harmonized` (used for priors; set to "Unknown" if absent); `Group3` (kept as source type) |
 | Mandatory columns – metadata file | `MySysID`, `Group1`, `Group2`, `Group3` (the file is ID-suffixed and saved; not used further) |
@@ -65,7 +65,7 @@ The six source data sets are combined into one master contaminant source databas
 
 | | |
 |---|---|
-| File | `Literature_Products.csv` |
+| File | `source_databases/Literature_Products.csv` |
 | Format | CSV, comma-separated |
 | Mandatory columns | `MySysID` (→ ID, suffix `_COP`), `Brand-free Name` (→ name), `Feature_Name`, `InChIKey`, `puc_harmonized`, `Sample Concentration` (checked); `Group1` (→ kind), `Group2` (→ general category), `Group3` (→ type) |
 | Content | Compounds measured in consumer products, compiled from these publications: Park et al. (2024); Yun et al. (2023); Phillips et al. (2018); Lowe et al. (2021); Stanfield et al. (2025); Sørensen et al. (2023); Wu et al. (2023) (full references below). |
@@ -74,7 +74,7 @@ The six source data sets are combined into one master contaminant source databas
 
 | | |
 |---|---|
-| Files | Folder `CPDat/` with `product_compositions.tsv`, `products.tsv`, `product_use_categories.tsv` |
+| Files | Folder `source_databases/CPDat/` with `product_compositions.tsv`, `products.tsv`, `product_use_categories.tsv` |
 | Format | Tab-separated text |
 | Mandatory columns | `product_compositions.tsv`: `cpdat_product_id`, `inchikey` · `products.tsv`: `cpdat_product_id`, `product_title` · `product_use_categories.tsv`: `cpdat_product_id`, `puc_kind`, `puc_general_category`, `puc_harmonized` |
 | Mapping | ID + suffix `_CPD`; `product_title` → name; PUC kind → kind; PUC general category → general category. If a product has several PUCs, the first one (after sorting by ID) is used. |
@@ -86,7 +86,7 @@ The six source data sets are combined into one master contaminant source databas
 
 | | |
 |---|---|
-| File | `FooDB.csv` |
+| File | `source_databases/FooDB.csv` |
 | Format | **Tab-separated** despite the `.csv` extension |
 | Mandatory columns | The column check expects the full header of the merged file (40 columns, in this order): `cont_id, food_name_cont, orig_food_id, orig_food_scientific_name, orig_food_part, orig_source_id, orig_feature_name_cont, orig_content, orig_min, orig_max, orig_unit, food_id, food_sub_id, food_name_food, orig_food_common_name, food_name_scientific, description, itis_id, legacy_id, food_group, food_subgroup, food_type, food_group_harmonized, ncbi_taxonomy_id, public_food_id, cpd_id, public_cpd_id, inchikey, orig_feature_name_cpd, feature_name_pubchem, iupac_name, iupac_name_pubchem, cpd_description, cas, smiles, inchi, mono_mass, superclass, class_classyfire, subclass` |
 | Columns actually used | `food_sub_id` (→ ID, suffix `_FDB`), `orig_food_common_name` (→ name), `orig_feature_name_cpd`, `inchikey`, `food_group` (→ kind), `food_subgroup` (→ general category), `food_type`, `food_group_harmonized`, `orig_content` |
@@ -98,7 +98,7 @@ The six source data sets are combined into one master contaminant source databas
 
 | | |
 |---|---|
-| File | `SPECIATE.xlsx` (first sheet) |
+| File | `source_databases/SPECIATE.xlsx` (first sheet) |
 | Mandatory columns | `PROFILE_CODE` (→ ID, suffix `_SUS`), `PROFILE_NAME` (→ name), `Feature name`, `InChIKey`, `CATEGORY_LEVEL_1_Generation_Mechanism` (→ kind), `CATEGORY_LEVEL_2_Sector_Equipment` (→ general category), `CATEGORY_LEVEL_3_Fuel_Product` (→ type) |
 | Processing in Part 1 | Profiles named "Overall Average" are removed (non-specific aggregates). |
 | Source / version | US EPA SPECIATE v5.4, https://www.epa.gov/air-emissions-modeling/speciate [downloaded on 2026-03-13]. Prepared with https://github.com/r3bryk/speciate_v5.4_cleanup. |
@@ -108,7 +108,7 @@ The six source data sets are combined into one master contaminant source databas
 
 | | |
 |---|---|
-| File | `SPECIEUROPE.xlsx` (first sheet) |
+| File | `source_databases/SPECIEUROPE.xlsx` (first sheet) |
 | Mandatory columns | `PROFILE_CODE` (integer; → ID, suffix `_SEU`), `PROFILE_NAME`, `Feature name`, `InChIKey` (checked); `CATEGORY_LEVEL_1_Generation_Mechanism`, `CATEGORY_LEVEL_2_Sector_Equipment`, `CATEGORY_LEVEL_3_Fuel_Product` (used for kind and category; the same category vocabulary and prior tables as SPECIATE are used) |
 | Source / version | European Commission JRC SPECIEUROPE v3.0, https://source-apportionment.jrc.ec.europa.eu/Specieurope/index.aspx  [downloaded on 2026-03-16]. Prepared with https://github.com/r3bryk/specieurope_v3.0_cleanup. |
 | Terms | The data may be used provided the source is mentioned. Cite Pernigotti et al. (2016). |

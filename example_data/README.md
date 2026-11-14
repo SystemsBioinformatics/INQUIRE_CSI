@@ -8,7 +8,7 @@ The folder mirrors the input folders of the working folder `data/` (`preprocessi
 
 ### Sample data and household priors
 
-Paths are relative to `example_data/preprocessing_in/`, except the household priors (`example_data/analysis_in/`).
+Paths are relative to `example_data/preprocessing_in/` (the source databases are in its fixed subfolder `source_databases/`), except the household priors (`example_data/analysis_in/`).
 
 | File | Content |
 |---|---|
@@ -21,12 +21,12 @@ Each database contains **60 sources** (products, foods or emission profiles) in 
 
 | File | Origin in the pipeline | Sources | Content |
 |---|---|---|---|
-| `Own_Household_Products.csv`, `Own_Household_Products_Metadata.csv` | `HOUSEHOLD_PRODUCTS` | 60 | 58 synthetic products, up to 4 per sample key for the keys `LL01` and `LL02` of the sample groups (e.g., `AT01_CP01`–`AT01_CP04`), plus 2 real INQUIRE products (`FR01_CP04`, `FR01_CP05`). The synthetic products contain compounds detected in the samples with the same key, so they test the preference for a sample's own products. |
-| `Literature_Products.csv` | `LIT_CONSUMER_PRODUCTS` | 60 (+1 test) | 59 synthetic products in 11 consumer-product categories (cleaning products, air fresheners, personal care, toys, flooring, clothing, rubber mats, mosquito repellent), plus 1 real product (`CL24`, air-conditioner cleaner) |
-| `CPDat/product_compositions.tsv`, `CPDat/products.tsv`, `CPDat/product_use_categories.tsv` | `CPDAT` | 60 (+1 test) | 58 synthetic products in 15 product use categories (PUCs), plus 2 real CPDat products (1842, 1843, "Wood Cleaner") |
-| `FooDB.csv` (tab-separated) | `FOODB` | 60 | 58 synthetic foods in 16 food groups, plus 2 real FooDB foods (`287_01` Alfalfa, `725_44` Snack bar) |
-| `SPECIEUROPE.xlsx` | `SPECIEUROPE` | 60 | 58 synthetic profiles in 10 categories (wood burning, traffic, road and urban dust, residential heating, cooking, biogenic, consumer products), plus 2 real profiles (1 Cement, 302 Biomass burning) |
-| `SPECIATE.xlsx` | `SPECIATE` | 60 (+1 test) | 57 synthetic profiles in 12 categories (wood burning, cigarette smoke, cooking, vehicle exhaust, coatings, consumer products, road and soil dust, natural gas, aircraft, refinery), plus 3 real profiles (4663, 4664, 8811) |
+| `source_databases/Own_Household_Products.csv`, `Own_Household_Products_Metadata.csv` | `HOUSEHOLD_PRODUCTS` | 60 | 58 synthetic products, up to 4 per sample key for the keys `LL01` and `LL02` of the sample groups (e.g., `AT01_CP01`–`AT01_CP04`), plus 2 real INQUIRE products (`FR01_CP04`, `FR01_CP05`). The synthetic products contain compounds detected in the samples with the same key, so they test the preference for a sample's own products. |
+| `source_databases/Literature_Products.csv` | `LIT_CONSUMER_PRODUCTS` | 60 (+1 test) | 59 synthetic products in 11 consumer-product categories (cleaning products, air fresheners, personal care, toys, flooring, clothing, rubber mats, mosquito repellent), plus 1 real product (`CL24`, air-conditioner cleaner) |
+| `source_databases/CPDat/product_compositions.tsv`, `CPDat/products.tsv`, `CPDat/product_use_categories.tsv` | `CPDAT` | 60 (+1 test) | 58 synthetic products in 15 product use categories (PUCs), plus 2 real CPDat products (1842, 1843, "Wood Cleaner") |
+| `source_databases/FooDB.csv` (tab-separated) | `FOODB` | 60 | 58 synthetic foods in 16 food groups, plus 2 real FooDB foods (`287_01` Alfalfa, `725_44` Snack bar) |
+| `source_databases/SPECIEUROPE.xlsx` | `SPECIEUROPE` | 60 | 58 synthetic profiles in 10 categories (wood burning, traffic, road and urban dust, residential heating, cooking, biogenic, consumer products), plus 2 real profiles (1 Cement, 302 Biomass burning) |
+| `source_databases/SPECIATE.xlsx` | `SPECIATE` | 60 (+1 test) | 57 synthetic profiles in 12 categories (wood burning, cigarette smoke, cooking, vehicle exhaust, coatings, consumer products, road and soil dust, natural gas, aircraft, refinery), plus 3 real profiles (4663, 4664, 8811) |
 | `lookups/source_class_mapping.xlsx` | – | – | Example mapping of all categorizations above to the reporting levels `source_class` ("Domain \| Type") and `source_class_domain` (6 domains). The mapping for the real MCSDB is published on Zenodo together with the databases. |
 
 **Synthetic sources** were built from the compounds of `Sample_Data.xlsx`: each source contains a random set of compounds (typically 3–20) from compound classes that fit the database (e.g., personal-care compounds and plasticizers in consumer products; fatty acids and flavors in foods; PAHs and petroleum hydrocarbons in emission profiles). Source names and categories use the vocabulary of the real databases, so the priors of Part 2 work as with the real data, but the compositions are random. Concentrations and weight fractions are random numbers; CAS numbers and DTXSIDs are only given for the real example rows.
