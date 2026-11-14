@@ -64,8 +64,7 @@ The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old ha
 | `best_alpha`, `best_alpha_beam` | OPTIONAL: Specify best alphas manually based on the plots | automatic (highest score); reference run: 4500 | Use the lowest value on the plateau |
 | `PRIOR_TO_PENALTY_RATIO` | Calibrate prior strength | 1.0 | Optional check of the influence of the priors (e.g., 0.5 / 2.0) |
 | `CALIBRATION_MAX_SAMPLES` | Calibrate prior strength | all samples | – |
-| `VALIDATE_REAL` | Synthetic perturbation validation | `True` | See "Running without validation" in Part 2 doc |
-| `VALIDATE_SYNTHETIC` | Synthetic recovery validation cells | `True` | same |
+| `RUN_VALIDATION` | Run validation (optional) | `True` | `False` skips all validation (`INQUIRE_CSI_Pt2a_Validation.ipynb`); see "Running without validation" in Part 2 doc |
 | `dropout_rates`, `contam_rates` | Synthetic perturbation validation | [0.05, 0.1, 0.2], [0, 0.05, 0.1] | – |
 | `mixture_sizes`, `replicates` | Validation cells | [10, 100, 200, 300], 100 | More replicates for narrower CIs |
 | `overlap_thresholds` | Synthetic recovery validation with overlap sensitivity | [0.10, 0.50, "random"] | – |

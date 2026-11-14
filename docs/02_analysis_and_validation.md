@@ -113,9 +113,9 @@ Metrics: **compound precision** = share of the compounds of the selected sources
 
 | Block (cell) | What is tested | Setting (default) | How to read it |
 |---|---|---|---|
-| Synthetic perturbation (`VALIDATE_REAL`) | Robustness to missed detections (dropout) and to unrelated compounds (contamination) | 50 sources; dropout 5/10/20%; contamination 0/5/10%; 100 replicates each | Compound precision should stay high; it drops with contamination (extra compounds attract extra sources) |
-| Overlap sensitivity (`VALIDATE_SYNTHETIC`) | Effect of chemical similarity between true sources | 10/100/200/300 sources; max. pairwise Jaccard 0.1, 0.5 or random; 100 replicates | Source-level metrics fall when true sources overlap; `fallback_random` > 0 means the overlap constraint could not be met and a random mixture was used |
-| Chemistry-based recovery (`VALIDATE_SYNTHETIC`) | Recovery of chemically distinct mixtures | 10/100/200/300 sources with pairwise Jaccard ≤ 0.25; 100 replicates; 95% CIs and plots | Main synthetic result: high compound F1, low source F1 (values: [reference run](method_and_limitations.md#2-reference-run)) |
+| Synthetic perturbation | Robustness to missed detections (dropout) and to unrelated compounds (contamination) | 50 sources; dropout 5/10/20%; contamination 0/5/10%; 100 replicates each | Compound precision should stay high; it drops with contamination (extra compounds attract extra sources) |
+| Overlap sensitivity | Effect of chemical similarity between true sources | 10/100/200/300 sources; max. pairwise Jaccard 0.1, 0.5 or random; 100 replicates | Source-level metrics fall when true sources overlap; `fallback_random` > 0 means the overlap constraint could not be met and a random mixture was used |
+| Chemistry-based recovery | Recovery of chemically distinct mixtures | 10/100/200/300 sources with pairwise Jaccard ≤ 0.25; 100 replicates; 95% CIs and plots | Main synthetic result: high compound F1, low source F1 (values: [reference run](method_and_limitations.md#2-reference-run)) |
 | Cost-consistent | Mixtures drawn in proportion to the prior (plausible sources more often) | 10/100/200/300 sources; 100 replicates | `cost_ratio` < 1: the optimizer finds a cheaper explanation than the true one – expected because many sources are near-identical |
 | Noise robustness | Missing detections | 10/100/200/300 sources; 10/30/50% compounds removed; 100 replicates | Jaccard of compound sets should decrease gradually, not collapse |
 | Greedy stability | Effect of removing 5% of compounds | 10/100/200/300 sources; 100 replicates | Source-level Jaccard clearly lower than compound-level Jaccard: different but chemically equivalent sources are chosen |
@@ -153,7 +153,9 @@ Metrics: **compound precision** = share of the compounds of the selected sources
 
 ## Running without validation
 
-The validation blocks (section E) take several hours and are not needed for the source identification of the samples. To skip them: run all cells up to and including *Calibrate prior strength* (D4); then click the cell *Convert sample_universes DF to dictionary* and choose *Run → Run Selected Cell and All Below*. Do not only set `VALIDATE_REAL`/`VALIDATE_SYNTHETIC = False`: the other validation blocks would still run, and the master validation summary would fail.
+The validation blocks (section E) take several hours and are not needed for the source identification of the samples. They live in a separate notebook, `notebooks/INQUIRE_CSI_Pt2a_Validation.ipynb`, which is run from Part 2 by the cell *Run validation (optional)* (placed after *Calibrate prior strength*, D4). To skip validation, set `RUN_VALIDATION = False` in that cell and run the notebook as usual; the cells after it do not depend on the validation results.
+
+The validation notebook does **not** run stand-alone: it executes in the same kernel as Part 2 and uses its variables (`source_cpds`, `best_alpha`, `VALIDATION_SEED`, ...). To run only the validation, run Part 2 up to and including the *Run validation (optional)* cell with `RUN_VALIDATION = True`.
 
 ---
 
@@ -176,7 +178,7 @@ The validation blocks (section E) take several hours and are not needed for the 
 | `best_alpha`, `best_alpha_beam` | OPTIONAL: Specify best alphas manually | automatic maximum (reference run: 4500 set by hand) | Penalty weight used everywhere after tuning | To use the lowest value on the plateau |
 | `PRIOR_TO_PENALTY_RATIO` | Calibrate prior strength | 1.0 | Balance between priors and chemical fit | Optional check of the influence of the priors (e.g., 0.5 and 2.0) |
 | `CALIBRATION_MAX_SAMPLES` | Calibrate prior strength | all samples | Samples used for calibration | – |
-| `VALIDATE_REAL`, `VALIDATE_SYNTHETIC` | Validation cells | `True` | Switch the perturbation / overlap and chemistry-based blocks on/off | See "Running without validation" |
+| `RUN_VALIDATION` | Run validation (optional) | `True` | `True`: run `INQUIRE_CSI_Pt2a_Validation.ipynb` (all validation blocks); `False`: skip validation | See "Running without validation" |
 | Mixture sizes, replicates, rates | Validation cells | see table in E | Settings of each validation | More replicates for narrower CIs |
 | `MIN_COMPOUNDS` | LOSO reconstruction | 5 | Minimum compounds for a source to be tested | – |
 | `METRIC_INFO` | Validation interpretation engine | thresholds per metric | Interpretation categories | Other thresholds |
@@ -213,7 +215,7 @@ The validation blocks (section E) take several hours and are not needed for the 
 | `v_sources_masked missing required columns` (or `v_sources_meta_standardized …`) | Database from an older pipeline version | Re-run Part 1 |
 | Warning: modules in file but not in `MODULE_WEIGHT` (or vice versa) | Priors file and Part 2 module lists differ | Add the module to `MODULE_WEIGHT` and `MODULE_SOURCE_MAP` (weight 0 to ignore it) |
 | Warning: label does not fire | A label in `MODULE_SOURCE_MAP` matches no source | Check spelling against `analysis_out/lookups/source_categories_per_origin.csv` |
-| `NameError: best_alpha` / `PRIOR_STRENGTH` | Cells run out of order | Restart the kernel and run all cells from the top (or follow "Running without validation") |
-| `KeyError` in *Build master validation summary* | A validation block was switched off | Run all validation blocks, or skip the whole validation section |
+| `NameError: best_alpha` / `PRIOR_STRENGTH` | Cells run out of order | Restart the kernel and run all cells from the top |
+| `KeyError` in *Build master validation summary* | A validation block was switched off | Run all validation blocks (`RUN_VALIDATION = True`) or skip validation entirely (`RUN_VALIDATION = False`) |
 | `AssertionError: GREEDY failed to cover the universe` | Inconsistent inputs | Re-run Part 1 and Part 2 completely |
 | `PermissionError` when saving | Output open in Excel | Close the file |
