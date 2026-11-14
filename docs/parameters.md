@@ -41,6 +41,8 @@ The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old ha
 | `dust_cols_drop` | Reshape sample data | `7S_CS_01`–`7S_CS_04`, `Blank_NIST` (example) | **Always**: your own blank/QC columns |
 | `DROP_QC_COLUMNS` | Reshape sample data | `True` | `False` only to inspect blanks |
 | `REAGGREGATE_AFTER_MASKING` | Mask products/sources | `True` | Check only |
+| `EXPORT_TRACE_TABLES` | Working copies and ID suffixes | `True` | `False` skips the per-database traceability files (`databases_id_w_suffix/*.csv`, `databases_standardized/<database>_standardized.csv`, `cpdat_*_standardized.csv`); keep `True` for Zenodo traceability |
+| `EXPORT_EXCEL`, `VERIFY_AGAINST_CSV` | Build SQLite database | `True`, `True` | `False` to skip the Excel workbook or the check of the database against the CSV files (faster with large data) |
 
 ## Part 2 – INQUIRE_CSI_Pt2_Analysis_and_Validation
 

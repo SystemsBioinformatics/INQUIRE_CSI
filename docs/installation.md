@@ -134,8 +134,8 @@ INQUIRE_CSI/
     ├── preprocessing_out/                  ← Part 1 outputs
     │   ├── inquire_csi_pt1.sqlite          ← SQLite database (read by Part 2)
     │   ├── inspection/                     ← CSV and Excel copies of the database tables (not read by any notebook)
-    │   ├── databases_id_w_suffix/
-    │   ├── databases_standardized/
+    │   ├── databases_id_w_suffix/          ← optional (only if EXPORT_TRACE_TABLES = True in Part 1)
+    │   ├── databases_standardized/         ← per-database files only if EXPORT_TRACE_TABLES = True
     │   ├── all_sources_aggregated/
     │   ├── masked_sources/
     │   └── lookups/                        ← unmapped source categories (QC)

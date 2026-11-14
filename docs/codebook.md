@@ -53,6 +53,7 @@ This codebook lists every file the pipeline writes and explains its columns. All
 ## 2. Part 1 outputs
 
 ### 2.1 Databases with ID suffixes (`preprocessing_out/databases_id_w_suffix/`)
+Only written if `EXPORT_TRACE_TABLES = True` in Part 1 (default).
 Copies of the input databases, unchanged except that the ID column carries a database suffix: `_CPD` (CPDat), `_HHP` (own household products; note: the file `household_products_no-suffix.csv` *does* contain the suffix despite its name), `_COP` (literature products), `_FDB` (FooDB), `_SUS` (SPECIATE), `_SEU` (SPECIEUROPE). Columns as in the input files ([input_data.md](input_data.md)).
 
 ### 2.2 Harmonized source tables

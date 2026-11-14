@@ -32,12 +32,12 @@ All outputs are written to `data/preprocessing_out/` (created automatically; pat
 
 | Folder / file | Content | Used by |
 |---|---|---|
-| `databases_id_w_suffix/*.csv` | Each database with its database-specific ID suffix | traceability |
+| `databases_id_w_suffix/*.csv` | Each database with its database-specific ID suffix; only written if `EXPORT_TRACE_TABLES = True` | traceability |
 | `databases_standardized/all_sources_standardized.csv` | All sources in the harmonized schema incl. `source_class`, `source_class_domain`; one row per source × compound (before aggregation) | traceability, Zenodo |
 | `databases_standardized/sources_meta_standardized.csv` | Metadata (name, origin, kind, category, harmonized label, class, class domain) of **all** sources; one row per source | **Part 2** |
 | `databases_standardized/all_compounds_standardized.csv` | One row per compound (InChIKey) of all source databases: preferred name, all names, CAS numbers, DTXSIDs | reference, Zenodo |
 | `databases_standardized/dust_standardized.csv` | Sample table after removing rows without InChIKey and blank/QC columns | **Part 2** (compound names) |
-| `databases_standardized/<database>_standardized.csv` | Each database separately in the harmonized schema (with class columns where possible) | traceability |
+| `databases_standardized/<database>_standardized.csv` | Each database separately in the harmonized schema (with class columns where possible); only written if `EXPORT_TRACE_TABLES = True` | traceability, Zenodo |
 | `databases_standardized/equivalence_groups_members.csv`, `equivalence_groups_summary.csv` | First aggregation: which sources were merged into which representative | traceability |
 | `all_sources_aggregated/all_sources_aggregated.csv` | Source database after the first aggregation | traceability, Zenodo |
 | `masked_sources/sources_masked.csv` | **Final source database used for the samples**: only compounds found in the samples, after the second aggregation | **Part 2** |
@@ -78,7 +78,7 @@ About 14 minutes on the test laptop (INQUIRE reference run: 00:13:39). Loading t
 
 The tables to clean are set in `INCHIKEY_DFS`, the possible names of the InChIKey column in `INCHIKEY_COL_NAMES` (`inchikey`, `InChIKey`, `InChiKey`; found automatically). A table that does not exist or has no InChIKey column is skipped with a warning.
 
-**7. Working copies and ID suffixes.** Creates working copies and adds a database suffix to every source ID: `_CPD` (CPDat), `_HHP` (own household products), `_COP` (literature consumer products), `_FDB` (FooDB), `_SUS` (SPECIATE), `_SEU` (SPECIEUROPE). The suffixed tables are saved in `databases_id_w_suffix/`.
+**7. Working copies and ID suffixes.** Creates working copies and adds a database suffix to every source ID: `_CPD` (CPDat), `_HHP` (own household products), `_COP` (literature consumer products), `_FDB` (FooDB), `_SUS` (SPECIATE), `_SEU` (SPECIEUROPE). The suffixed tables are saved in `databases_id_w_suffix/` if `EXPORT_TRACE_TABLES = True`.
 
 **8. Standardize and harmonize the source databases.** Converts every database to the common schema `source_id, source_name, inchikey, source_origin, source_kind, source_general_category, source_harmonized` (mapping per database in [input_data.md, section 2](input_data.md#2-source-databases-part-1)). Specific steps:
 - CPDat: keeps one product-use category (PUC) per product and adds product titles as names.
@@ -138,6 +138,7 @@ The next two cells print column statistics before and after aggregation and save
 | `REAGGREGATE_AFTER_MASKING` | Mask products/sources | `True` | Second aggregation after masking | `False` only as a check |
 | `EXPORT_EXCEL` | Build SQLite database | `True` | Also write `inspection/inquire_csi_pt1.xlsx` (tables with more than 100,000 rows are CSV only; `excel_max_rows` in `csi_db.export_all`) | `False` for faster runs with large databases |
 | `VERIFY_AGAINST_CSV` | Build SQLite database | `True` | Check that every database view equals its original CSV file | `False` only to save time on large runs |
+| `EXPORT_TRACE_TABLES` | Working copies and ID suffixes | `True` | `True` also writes the per-database traceability files `databases_id_w_suffix/*.csv`, `databases_standardized/<database>_standardized.csv` and `cpdat_*_standardized.csv` (traceability, Zenodo); they are not read by the SQLite database or Part 2. The other files in `databases_standardized/` are always written | `False` to save time and disk space |
 | `DB_FILE`, `INSPECT_DIR` | Build SQLite database | `PREP_OUT_DIR/inquire_csi_pt1.sqlite`, `PREP_OUT_DIR/inspection` | Location of the database and the inspection copies | – |
 
 **NB!** With `DROP_QC_COLUMNS = False`, Part 1 writes `dust_standardized_qc_cols.csv`, but Part 2 reads `dust_standardized.csv` (only used for compound names). Part 2 then uses an older `dust_standardized.csv` if one exists, or stops if none exists. The sample universes, which Part 2 analyzes, always follow the setting.
