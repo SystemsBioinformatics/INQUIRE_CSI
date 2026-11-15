@@ -17,7 +17,7 @@ From `data/preprocessing_in/` (set by `config.yaml`; the folder must exist, othe
 
 | Input | File |
 |---|---|
-| Sample data | `Sample_Data.xlsx` |
+| Sample data | `Sample_Data.xlsx` (default; file name set by `files: sample_data` in `config.yaml`) |
 | Own household products + metadata | `Own_Household_Products.csv`, `Own_Household_Products_Metadata.csv` |
 | Literature consumer products | `Literature_Products.csv` |
 | CPDat | `CPDat/product_compositions.tsv`, `products.tsv`, `product_use_categories.tsv` |
@@ -64,7 +64,7 @@ About 14 minutes on the test laptop (INQUIRE reference run: 00:13:39). Loading t
 
 **2. Imports & setup.** Loads the packages, starts logging (messages appear in the notebook and in `inquire_csi_pt1_preprocessing_log_<yymmdd>.log`), defines helper functions (reading CSV/Excel with automatic encoding fallback over `ENCODINGS`, column checks, whitespace stripping) and sets `GLOBAL_SEED = 1`.
 
-**3. Check necessary columns.** Reads `config.yaml` and sets `DATA_DIR`, `PREP_IN_DIR` and `PREP_OUT_DIR` (stops if the working or input folder does not exist; creates the output folders), reads only the header row of every input file and checks the mandatory columns. Stops with a list of missing and available columns if a column is missing. This is fast and avoids loading large files only to fail later.
+**3. Check necessary columns.** Reads `config.yaml` and sets `DATA_DIR`, `PREP_IN_DIR`, `SAMPLE_DATA_FILE` (from `files: sample_data`) and `PREP_OUT_DIR` (stops if the working or input folder does not exist; creates the output folders), reads only the header row of every input file and checks the mandatory columns. Stops with a list of missing and available columns if a column is missing. This is fast and avoids loading large files only to fail later.
 
 **4. Load raw input data.** Loads all files and prints their numbers of rows and columns. SPECIATE profiles named "Overall Average" are removed, because they are averages over many sources, not real sources.
 

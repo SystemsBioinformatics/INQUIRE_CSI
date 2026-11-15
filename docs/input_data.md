@@ -1,6 +1,6 @@
 # Input data: files, formats and mandatory columns
 
-All Part 1 input files go into `data/preprocessing_in/` and the optional household priors into `data/analysis_in/` (folder names and location of `data/` are set in `config.yaml`; `preprocessing_in/` must exist before Part 1 is run). The source database files (section 2) go into the fixed subfolder `preprocessing_in/source_databases/`, which must also exist. Paths in this document are relative to these two folders. The three output folders are named `preprocessing_out`, `analysis_out` and `visualization_out`. File names are set in the data-loading cells of each notebook. If your files have other names, change them there (search for `safe_read_csv(`, `safe_read_excel(`, and `check_cols_before_load(`).
+All Part 1 input files go into `data/preprocessing_in/` and the optional household priors into `data/analysis_in/` (folder names and location of `data/` are set in `config.yaml`; `preprocessing_in/` must exist before Part 1 is run). The source database files (section 2) go into the fixed subfolder `preprocessing_in/source_databases/`, which must also exist. Paths in this document are relative to these two folders. The three output folders are named `preprocessing_out`, `analysis_out` and `visualization_out`. The name of the sample data file is set in `config.yaml` (`files: sample_data`); the other file names are set in the data-loading cells of each notebook. If your files have other names, change them there (for the sample data, change `files: sample_data` in `config.yaml`; otherwise search for `safe_read_csv(`, `safe_read_excel(`, and `check_cols_before_load(`).
 
 Each notebook first checks the **header row** of every input file for the mandatory columns (cell *Check if necessary columns exist…*). It stops with a clear error message if a column is missing. Column names are case-sensitive. Leading/trailing spaces in column names and in key text columns are removed automatically (Part 1, *Whitespace cleanup*). InChIKeys of all source databases and of the sample data are also cleaned automatically: converted to upper case, placeholders and numbers set to missing, and a digit "0" replaced by the letter "O" (Part 1, *InChIKey cleanup*).
 
@@ -31,7 +31,7 @@ For testing, `example_data/` contains a complete synthetic set of all input file
 
 | | |
 |---|---|
-| File | `Sample_Data.xlsx` |
+| File | `Sample_Data.xlsx` (default; the file name is set by `files: sample_data` in `config.yaml`) |
 | Format | Excel, first sheet; one row per detected feature (compound), one column per sample |
 | Mandatory columns | `inchikey`, `Feature Name`, `Class`, `Concentration Type` |
 | Sample columns | **All columns to the right of `Concentration Type`** are treated as samples. A value **> 0** means "compound detected in this sample"; empty/0 = not detected. Concentrations are not used, only presence/absence. |

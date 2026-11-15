@@ -13,3 +13,7 @@ folders:
   analysis_in: analysis_in              # Pt2 extra input: geo_metadata_outputs/household_metadata_priors.csv
   analysis_out: analysis_out            # Pt2 output: read by Pt3
   visualization_out: visualization_out  # Pt3 output: figures
+
+# Input file names (inside folders: preprocessing_in)
+files:
+  sample_data: Sample_Data.xlsx         # Pt1 input: non-target screening results, one column per sample

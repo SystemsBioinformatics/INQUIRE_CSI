@@ -151,7 +151,7 @@ INQUIRE_CSI/
     └── visualization_out/                  ← Part 3 outputs (figures)
 ```
 
-If you prefer another location, change `data_dir` in `config.yaml` (relative to `config.yaml`, or an absolute path such as `D:/projects/INQUIRE_CSI/data`; use forward slashes `/` on Windows). The subfolder names can be changed under `folders:`. All three notebooks read this file, so there is nothing to change in the notebooks.
+If you prefer another location, change `data_dir` in `config.yaml` (relative to `config.yaml`, or an absolute path such as `D:/projects/INQUIRE_CSI/data`; use forward slashes `/` on Windows). The subfolder names can be changed under `folders:`, and the name of the sample data file (in `preprocessing_in/`) under `files: sample_data`. All three notebooks read this file, so there is nothing to change in the notebooks.
 
 **Log files:** Parts 1–3 write a log file (copy of all printed messages) into the folder from which the notebook runs (`notebooks/`): `inquire_csi_pt1_preprocessing_log_<yymmdd>.log`, `inquire_csi_pt2_analysis_and_validation_log_<yymmdd>.log` and `inquire_csi_pt3_visualization_log_<yymmdd>.log`. A new run on the same day overwrites the log of that day. Keep them as a record of each run, but do not upload them to a public repository (they contain sample IDs and per-sample results).
 

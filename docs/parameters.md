@@ -16,6 +16,7 @@ Read by all three notebooks (PyYAML). Paths are relative to the location of `con
 | `folders: analysis_in` | `analysis_in` | Part 2 extra input (household priors) |
 | `folders: analysis_out` | `analysis_out` | Part 2 output (read by Part 3); use another name to keep runs separate |
 | `folders: visualization_out` | `visualization_out` | Part 3 output (figures) |
+| `files: sample_data` | `Sample_Data.xlsx` | Other file name of the sample data (Part 1 input; located in `folders: preprocessing_in`) |
 
 The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old hard-coded `DATA_DIR = Path("../data")` no longer exists.
 
@@ -23,6 +24,7 @@ The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old ha
 
 | Parameter | Cell | Default | Change when |
 |---|---|---|---|
+| `SAMPLE_DATA_FILE` | Configuration | `<data_dir>/preprocessing_in/Sample_Data.xlsx` | Set via `files: sample_data` in `config.yaml`, not in the notebook |
 | `PREP_IN_DIR`, `PREP_OUT_DIR`, `LOOKUP_IN_DIR`, `SOURCE_DB_DIR` | Configuration | `<data_dir>/preprocessing_in`, `<data_dir>/preprocessing_out`, `PREP_IN_DIR/lookups`, `PREP_IN_DIR/source_databases` (fixed name, must exist) | Set via `config.yaml`, not in the notebook |
 | Input file names | Check columns / Load raw input data | see [input_data.md](input_data.md) | Other files |
 | `GLOBAL_SEED` | Imports & setup | 1 | – |
