@@ -54,7 +54,7 @@ The INQUIRE household priors were computed from household data that cannot be pu
 
 ## Modules, weights and linked source categories
 
-The weights (`MODULE_WEIGHT`) and links (`MODULE_SOURCE_MAP`) are set in Part 2; the table summarizes the defaults.
+The weights (`MODULE_WEIGHT`) and links (`MODULE_SOURCE_MAP`) are read by Part 2 from `data/priors/module_weights.csv` and `data/priors/module_source_map.csv`; the table summarizes the defaults.
 
 | Module | Main household information | Weight | Linked source categories (examples) |
 |---|---|---|---|
@@ -93,6 +93,6 @@ The weights (`MODULE_WEIGHT`) and links (`MODULE_SOURCE_MAP`) are set in Part 2;
 1. Collect household information that indicates the presence or intensity of the source groups above.
 2. For each module, compute a score per household with the steps above (or any monotonic score where higher = more of the linked sources).
 3. Convert each module to mid-rank likelihoods (0.02–0.98, mean 0.5) and save the table with `household_id` and `<module>_likelihood` columns.
-4. You can use a subset of modules. Modules not in your file have no effect. New modules must be added to `MODULE_WEIGHT` and `MODULE_SOURCE_MAP` in Part 2.
+4. You can use a subset of modules. Modules not in your file have no effect. New modules must be added to `module_weights.csv` and `module_source_map.csv` in `data/priors/`.
 
 **NB!** Household-level data are personal data. Do not publish `household_metadata_priors.csv` or its inputs without checking data-protection rules.

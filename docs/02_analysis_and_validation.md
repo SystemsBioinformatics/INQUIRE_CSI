@@ -65,7 +65,7 @@ About 5 hours for ~200 samples on the test laptop (INQUIRE reference run: 05:02:
 
 **B2. Geo metadata module weights (`MODULE_WEIGHT`).** One weight (0–1) per household-prior module ([household_priors.md](household_priors.md)) that says how strongly that household information may change the prior. Weight 0 switches a module off (`vaping`, `ventilation`, `pfas`: no matching source category or no clear direction).
 
-**B3. Map geo modules to sources (`MODULE_SOURCE_MAP`).** Links each module to source categories per origin (e.g., `wood_burning` → SPECIATE/SPECIEUROPE "Biomass Burning; Residential Wood Combustion*"; `traffic` → SPECIATE "Mobile; Onroad*", CPDat "Vehicles", literature "SBR & NR" (tire rubber)). Matching rules: a label matches a source if it equals its general category **or** its kind; a label ending with `*` also matches all sub-categories; labels are matched within one origin only. Most categories are linked to one module, at most two. The cell checks that module names agree between `MODULE_WEIGHT`, `MODULE_SOURCE_MAP` and the priors file.
+**B3. Map geo modules to sources (`MODULE_SOURCE_MAP`, from `data/priors/module_source_map.csv`, one row per module × origin × label).** Links each module to source categories per origin (e.g., `wood_burning` → SPECIATE/SPECIEUROPE "Biomass Burning; Residential Wood Combustion*"; `traffic` → SPECIATE "Mobile; Onroad*", CPDat "Vehicles", literature "SBR & NR" (tire rubber)). Matching rules: a label matches a source if it equals its general category **or** its kind; a label ending with `*` also matches all sub-categories; labels are matched within one origin only. Most categories are linked to one module, at most two. The cell checks that module names agree between `MODULE_WEIGHT`, `MODULE_SOURCE_MAP` and the priors file.
 
 **B4. Check the geo mapping.** Reports for every label whether it matches any source (all should be "OK"), the share of sources per origin that household priors can influence, and which samples have **no** household metadata (they are analyzed without household priors). Saves `geo_metadata_outputs/geo_mapping_check.csv`.
 
@@ -170,7 +170,7 @@ The validation notebook does **not** run stand-alone: it executes in the same ke
 | `SOURCE_WEIGHT` (`data/priors/source_weights.csv`) | Define source weights & priors | HHP 1.0, LIT 0.8, FooDB 0.7, SPECIEUROPE 0.6, SPECIATE 0.4, CPDat 0.2 | Reliability of each database | Other databases or judgment (report it) |
 | `*_KIND_PRIOR`, `*_CATEGORY_PRIOR`, `PRIOR_TABLES` (`data/priors/prior_tables.csv`, `kind_priors.csv`, `category_priors.csv`) | Define source weights & priors | see CSV files | Plausibility of each kind/category as a dust source; default per origin | New categories; other matrices |
 | `MODULE_WEIGHT` (`data/priors/module_weights.csv`) | Geo metadata influence weights | 0–1 per module | Strength of each household module | New modules; switching a module off (0) |
-| `MODULE_SOURCE_MAP` | Map geo metadata modules to sources | see notebook | Which source categories each module affects | New source categories or modules |
+| `MODULE_SOURCE_MAP` (`data/priors/module_source_map.csv`) | Map geo metadata modules to sources | see CSV file | Which source categories each module affects | New source categories or modules |
 | `HH_SAME_HOUSEHOLD`, `HH_SAME_COUNTRY`, `HH_OTHER_COUNTRY` | Source prior helper | 2.0, 0.5, 0.2 | Household factor for own analyzed products | Other weighting of own products |
 | `BEAM_MAX_CANDIDATES` | Beam Search multiple-cover algorithm | `None` (all) | Cap on candidates scored per beam node | Speed-up for very large databases (e.g., 2000) |
 | `USE_TIERED_COVER` | Tiered set cover | `False` | Databases used in order of `SOURCE_WEIGHT` | Comparison with a strict hierarchy |
@@ -214,7 +214,7 @@ The validation notebook does **not** run stand-alone: it executes in the same ke
 | `[geo_metadata_prior] … missing` / file not found | `USE_GEO_PRIORS = True` but no priors file in `<data_dir>/analysis_in/geo_metadata_outputs/` | Add the file ([household_priors.md](household_priors.md)) or set `USE_GEO_PRIORS = False` |
 | `v_sources_masked missing required columns` (or `v_sources_meta_standardized …`) | Database from an older pipeline version | Re-run Part 1 |
 | Warning: modules in file but not in `MODULE_WEIGHT` (or vice versa) | Priors file and Part 2 module lists differ | Add the module to `module_weights.csv` and `MODULE_SOURCE_MAP` (weight 0 to ignore it) |
-| Warning: label does not fire | A label in `MODULE_SOURCE_MAP` matches no source | Check spelling against `analysis_out/lookups/source_categories_per_origin.csv` |
+| Warning: label does not fire | A label in `module_source_map.csv` matches no source | Check spelling against `analysis_out/lookups/source_categories_per_origin.csv` |
 | `NameError: best_alpha` / `PRIOR_STRENGTH` | Cells run out of order | Restart the kernel and run all cells from the top |
 | `KeyError` in *Build master validation summary* | A validation block was switched off | Run all validation blocks (`RUN_VALIDATION = True`) or skip validation entirely (`RUN_VALIDATION = False`) |
 | `AssertionError: GREEDY failed to cover the universe` | Inconsistent inputs | Re-run Part 1 and Part 2 completely |

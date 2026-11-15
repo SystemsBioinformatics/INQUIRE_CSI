@@ -58,7 +58,7 @@ The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old ha
 | `CONS_PRODS_*`, `PUC_*`, `FOODB_*`, `SPECIATE_*` `_KIND_PRIOR` / `_CATEGORY_PRIOR` | Define source weights & priors | see notebook | New categories; other matrices |
 | `PRIOR_TABLES` (default kind prior per origin) | Define source weights & priors | 0.5 (HHP, LIT), 0.2 (CPDat, FooDB), 0.3 (SPECIATE, SPECIEUROPE) | New origins |
 | `MODULE_WEIGHT` | Geo metadata influence weights | 0–1 per module (0 for vaping, ventilation, pfas) | New/disabled modules |
-| `MODULE_SOURCE_MAP` | Map geo metadata modules to sources | see notebook | New categories/modules |
+| `MODULE_SOURCE_MAP` (`data/priors/module_source_map.csv`) | Map geo metadata modules to sources | see CSV file | New categories/modules |
 | `HH_SAME_HOUSEHOLD` / `HH_SAME_COUNTRY` / `HH_OTHER_COUNTRY` | Source prior helper | 2.0 / 0.5 / 0.2 (same `LLNN` / same `LL` / other) | Other weighting of own products |
 | `BEAM_MAX_CANDIDATES` | Beam Search multiple-cover algorithm | `None` | Speed-up (e.g., 2000) |
 | `USE_TIERED_COVER` | OPTIONAL: Tiered set cover by source origin | `False` | Comparison with a strict database hierarchy |

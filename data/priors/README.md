@@ -11,6 +11,7 @@ Folder location: `folders.priors` in `config.yaml` (relative to `data_dir`); thi
 | `kind_priors.csv` | table, source_kind, prior, group, rationale | `<table>_KIND_PRIOR` |
 | `category_priors.csv` | table, source_general_category, prior, group, rationale | `<table>_CATEGORY_PRIOR` |
 | `module_weights.csv` | module, weight, group, rationale | `MODULE_WEIGHT` |
+| `module_source_map.csv` | module, source_origin, label, group, rationale | `MODULE_SOURCE_MAP` (one row per label; trailing `*` = also all sub-categories) |
 
 `group` holds the section heading of the original notebook; `rationale` the per-value comment.
 Tables are shared between origins via `prior_tables.csv` (CONS_PRODS: HOUSEHOLD_PRODUCTS and LIT_CONSUMER_PRODUCTS;

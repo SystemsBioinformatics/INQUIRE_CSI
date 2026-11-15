@@ -1,0 +1,163 @@
+module,source_origin,label,group,rationale
+wood_burning_likelihood,SPECIATE,Biomass Burning; Residential Wood Combustion*,indoor combustion,
+wood_burning_likelihood,SPECIATE,Biomass Burning; Biofuel,indoor combustion,
+wood_burning_likelihood,SPECIEUROPE,Biomass Burning; Residential Wood Combustion*,indoor combustion,
+wood_burning_likelihood,SPECIEUROPE,Biomass Burning; Biofuel,indoor combustion,
+gas_oil_combustion_likelihood,SPECIATE,Residential*,indoor combustion,residential gas/oil combustion & boilers
+gas_oil_combustion_likelihood,SPECIEUROPE,Residential*,indoor combustion,
+smoking_likelihood,SPECIATE,Cigarette,indoor combustion,
+fresheners_candles_likelihood,LIT_CONSUMER_PRODUCTS,Formulation,indoor products & activities,"air fresheners 1-60, indoor deodorizers"
+fresheners_candles_likelihood,LIT_CONSUMER_PRODUCTS,Indoor,indoor products & activities,"air fresheners 1-60, indoor deodorizers"
+fresheners_candles_likelihood,HOUSEHOLD_PRODUCTS,Air Freshener,indoor products & activities,(scented) candles
+pesticides_household_likelihood,CPDAT,Pesticides,indoor products & activities,consumer biocides/insecticides
+pesticides_household_likelihood,LIT_CONSUMER_PRODUCTS,Mosquito,indoor products & activities,mosquito & mite products
+pesticides_household_likelihood,LIT_CONSUMER_PRODUCTS,Acari,indoor products & activities,mosquito & mite products
+cleaning_products_likelihood,CPDAT,Cleaning - Household,indoor products & activities,
+cleaning_products_likelihood,LIT_CONSUMER_PRODUCTS,Cleaning Product,indoor products & activities,kind: all cleaners
+cleaning_products_likelihood,LIT_CONSUMER_PRODUCTS,Bathroom,indoor products & activities,incl. solvent/water-based cleaners
+cleaning_products_likelihood,LIT_CONSUMER_PRODUCTS,Window,indoor products & activities,incl. solvent/water-based cleaners
+cleaning_products_likelihood,LIT_CONSUMER_PRODUCTS,Multipurpose,indoor products & activities,incl. solvent/water-based cleaners
+cleaning_products_likelihood,LIT_CONSUMER_PRODUCTS,Floor,indoor products & activities,incl. solvent/water-based cleaners
+cleaning_products_likelihood,SPECIATE,Consumer Products*,indoor products & activities,volatile consumer-product profiles (mostly cleaners/aerosols)
+cleaning_products_likelihood,SPECIEUROPE,Consumer Products,indoor products & activities,
+pets_likelihood,CPDAT,Animal Care,indoor products & activities,"flea/tick treatments, pet shampoos"
+children_likelihood,CPDAT,Toys & Children Products,indoor products & activities,
+children_likelihood,LIT_CONSUMER_PRODUCTS,Children's Products,indoor products & activities,
+children_likelihood,LIT_CONSUMER_PRODUCTS,Baby Soap,indoor products & activities,
+children_likelihood,HOUSEHOLD_PRODUCTS,Children's Products,indoor products & activities,
+children_likelihood,FOODB,Baby foods,indoor products & activities,
+occupancy_likelihood,CPDAT,Personal Care,indoor products & activities,
+occupancy_likelihood,LIT_CONSUMER_PRODUCTS,Personal Care Products,indoor products & activities,
+occupancy_likelihood,LIT_CONSUMER_PRODUCTS,Shampoo,indoor products & activities,
+occupancy_likelihood,SPECIATE,Cooking*,indoor products & activities,
+occupancy_likelihood,FOODB,Cereals and cereal products,indoor products & activities,
+occupancy_likelihood,FOODB,Baking goods,indoor products & activities,
+occupancy_likelihood,FOODB,Fats and oils,indoor products & activities,
+occupancy_likelihood,FOODB,Herbs and Spices,indoor products & activities,
+occupancy_likelihood,FOODB,Herbs and spices,indoor products & activities,
+occupancy_likelihood,FOODB,Coffee and coffee products,indoor products & activities,
+occupancy_likelihood,FOODB,Teas,indoor products & activities,
+occupancy_likelihood,FOODB,Milk and milk products,indoor products & activities,
+occupancy_likelihood,FOODB,Animal foods,indoor products & activities,
+occupancy_likelihood,FOODB,Dishes,indoor products & activities,
+occupancy_likelihood,FOODB,Snack foods,indoor products & activities,food groups (FooDB source_kind)
+occupancy_likelihood,FOODB,Cocoa and cocoa products,indoor products & activities,food groups (FooDB source_kind)
+occupancy_likelihood,FOODB,Confectioneries,indoor products & activities,food groups (FooDB source_kind)
+electronics_likelihood,CPDAT,Electronics,indoor products & activities,
+electronics_likelihood,CPDAT,Machinery - Consumer,indoor products & activities,
+electronics_likelihood,CPDAT,Batteries,indoor products & activities,
+electronics_likelihood,LIT_CONSUMER_PRODUCTS,Air Conditioner,indoor products & activities,
+electronics_likelihood,HOUSEHOLD_PRODUCTS,Electronics,indoor products & activities,
+floor_textile_likelihood,LIT_CONSUMER_PRODUCTS,Carpet,building & materials,carpets; rubber rugs/mats
+floor_textile_likelihood,LIT_CONSUMER_PRODUCTS,Recycled Tire Products,building & materials,carpets; rubber rugs/mats
+floor_textile_likelihood,HOUSEHOLD_PRODUCTS,Carpet,building & materials,
+floor_textile_likelihood,CPDAT,Furniture & Furnishings,building & materials,incl. carpets & rugs
+floor_resilient_likelihood,LIT_CONSUMER_PRODUCTS,SV,building & materials,vinyl flooring
+floor_resilient_likelihood,LIT_CONSUMER_PRODUCTS,EVA,building & materials,vinyl flooring
+floor_resilient_likelihood,LIT_CONSUMER_PRODUCTS,EVS,building & materials,vinyl flooring
+floor_resilient_likelihood,HOUSEHOLD_PRODUCTS,Floor,building & materials,flooring (Construction Materials)
+floor_resilient_likelihood,CPDAT,Construction Materials,building & materials,
+wood_surfaces_likelihood,SPECIATE,Surface Coating; Wood Furniture,building & materials,
+wood_surfaces_likelihood,SPECIATE,Surface Coating; Flat Wood,building & materials,
+wood_surfaces_likelihood,LIT_CONSUMER_PRODUCTS,Polish,building & materials,polish coating agent
+wood_surfaces_likelihood,CPDAT,Home Maintenance,building & materials,"varnishes, stains, sealants"
+wood_surfaces_likelihood,HOUSEHOLD_PRODUCTS,Furniture,building & materials,
+building_age_likelihood,LIT_CONSUMER_PRODUCTS,Construction Materials,building & materials,
+building_age_likelihood,HOUSEHOLD_PRODUCTS,Construction Materials,building & materials,
+building_age_likelihood,SPECIATE,Surface Coating; Architectural,building & materials,old paints
+renovation_likelihood,CPDAT,Construction,building & materials,
+renovation_likelihood,CPDAT,Home Maintenance,building & materials,
+renovation_likelihood,CPDAT,Construction Materials,building & materials,
+renovation_likelihood,LIT_CONSUMER_PRODUCTS,SV,building & materials,new vinyl flooring
+renovation_likelihood,LIT_CONSUMER_PRODUCTS,EVA,building & materials,new vinyl flooring
+renovation_likelihood,LIT_CONSUMER_PRODUCTS,EVS,building & materials,new vinyl flooring
+renovation_likelihood,SPECIATE,Surface Coating; Architectural,building & materials,"fresh paints, solvents"
+renovation_likelihood,SPECIATE,Solvent,building & materials,"fresh paints, solvents"
+airport_likelihood,SPECIATE,Mobile; Aircraft,outdoor,
+airport_likelihood,SPECIATE,Mobile; Airport,outdoor,
+airport_likelihood,SPECIATE,Surface Coating; Aircraft,outdoor,
+traffic_likelihood,SPECIATE,Mobile,outdoor,
+traffic_likelihood,SPECIATE,Mobile; Onroad*,outdoor,
+traffic_likelihood,SPECIATE,Mobile; Moped,outdoor,
+traffic_likelihood,SPECIATE,Road,outdoor,
+traffic_likelihood,SPECIATE,Transport,outdoor,
+traffic_likelihood,SPECIATE,Surface Coating; Traffic Paints,outdoor,"""Mobile""/""Transport"" = fuels, refuelling"
+traffic_likelihood,SPECIEUROPE,Mobile; Onroad*,outdoor,
+traffic_likelihood,SPECIEUROPE,Road,outdoor,
+traffic_likelihood,SPECIEUROPE,Urban; Road,outdoor,
+traffic_likelihood,CPDAT,Vehicles,outdoor,"fuels/fluids, brake linings"
+traffic_likelihood,CPDAT,Vehicles - Road,outdoor,"fuels/fluids, brake linings"
+traffic_likelihood,LIT_CONSUMER_PRODUCTS,SBR & NR,outdoor,tyre rubber
+industry_likelihood,SPECIATE,Industrial*,outdoor,
+industry_likelihood,SPECIATE,Chemical Manufacturing*,outdoor,
+industry_likelihood,SPECIATE,Petrochemical*,outdoor,
+industry_likelihood,SPECIATE,Refinery*,outdoor,
+industry_likelihood,SPECIATE,Oil And Gas*,outdoor,
+industry_likelihood,SPECIATE,Oil and gas*,outdoor,
+industry_likelihood,SPECIATE,Pulp And Paper*,outdoor,
+industry_likelihood,SPECIATE,Electric Generation*,outdoor,
+industry_likelihood,SPECIATE,Mineral Products*,outdoor,
+industry_likelihood,SPECIATE,Coke Oven,outdoor,
+industry_likelihood,SPECIATE,Basic Oxygen Furnace,outdoor,
+industry_likelihood,SPECIATE,Boiler,outdoor,
+industry_likelihood,SPECIATE,Engine,outdoor,
+industry_likelihood,SPECIATE,Turbine,outdoor,
+industry_likelihood,SPECIATE,Flare,outdoor,
+industry_likelihood,SPECIATE,Tank,outdoor,
+industry_likelihood,SPECIATE,Warehousing,outdoor,
+industry_likelihood,SPECIATE,Paint Manufacturing,outdoor,
+industry_likelihood,SPECIATE,Rubber And Plastics,outdoor,
+industry_likelihood,SPECIATE,Textile Products,outdoor,
+industry_likelihood,SPECIATE,Degreasing,outdoor,
+industry_likelihood,SPECIATE,Construction,outdoor,
+industry_likelihood,SPECIEUROPE,Industrial,outdoor,
+industry_likelihood,SPECIEUROPE,Industrial; Boiler,outdoor,
+industry_likelihood,SPECIEUROPE,Industrial; Metal*,outdoor,
+industry_likelihood,SPECIEUROPE,Industrial; Furnace,outdoor,
+industry_likelihood,SPECIEUROPE,Coke Oven,outdoor,
+industry_likelihood,SPECIEUROPE,Electric Generation*,outdoor,"""Industrial; Marine/Port"" → marine"
+industry_likelihood,SPECIEUROPE,Boiler,outdoor,"""Industrial; Marine/Port"" → marine"
+industry_likelihood,SPECIEUROPE,Construction,outdoor,"""Industrial; Marine/Port"" → marine"
+industry_likelihood,CPDAT,Industrial,outdoor,
+industry_likelihood,CPDAT,Manufacturing,outdoor,
+industry_likelihood,CPDAT,Raw Materials,outdoor,
+industry_likelihood,CPDAT,Machinery - Industrial,outdoor,
+agriculture_likelihood,SPECIATE,Agriculture*,outdoor,
+agriculture_likelihood,FOODB,Cereals and cereal products,outdoor,"wheat, barley, rye, oats, maize, rice, other cereals"
+agriculture_likelihood,FOODB,Tubers,outdoor,potatoes
+agriculture_likelihood,FOODB,Root vegetables,outdoor,"sugar beet, other root crops"
+agriculture_likelihood,FOODB,Sugars,outdoor,"sugar beet, other root crops"
+agriculture_likelihood,FOODB,Oilseed crops,outdoor,"sunflower, rape"
+agriculture_likelihood,FOODB,Vegetable fats,outdoor,"sunflower, rape"
+agriculture_likelihood,FOODB,Soy,outdoor,"soya, dry pulses"
+agriculture_likelihood,FOODB,Pulses,outdoor,"soya, dry pulses"
+agriculture_likelihood,FOODB,Fruits,outdoor,"permanent crops (orchards, olives, vineyards)"
+agriculture_likelihood,FOODB,Nuts,outdoor,"permanent crops (orchards, olives, vineyards)"
+agriculture_likelihood,FOODB,Fruit vegetables,outdoor,"permanent crops (orchards, olives, vineyards)"
+agri_pesticides_likelihood,SPECIATE,Pesticides,outdoor,
+agri_pesticides_likelihood,CPDAT,Pesticides,outdoor,only the source database source of many pesticide active ingredients
+urban_likelihood,SPECIATE,Urban,outdoor,
+urban_likelihood,SPECIEUROPE,Urban,outdoor,"""Urban; Road"" is linked to traffic"
+green_likelihood,SPECIEUROPE,Biogenic Emissions,outdoor,vegetation; soil/mineral dust
+green_likelihood,SPECIEUROPE,Mineral,outdoor,vegetation; soil/mineral dust
+green_likelihood,SPECIATE,Geological,outdoor,soil
+green_likelihood,CPDAT,Landscape & Yard,outdoor,garden products
+marine_likelihood,SPECIEUROPE,Marine,outdoor,
+marine_likelihood,SPECIEUROPE,Mobile; Marine*,outdoor,
+marine_likelihood,SPECIEUROPE,Industrial; Marine,outdoor,
+marine_likelihood,SPECIEUROPE,Industrial; Port,outdoor,
+marine_likelihood,SPECIATE,Mobile; Marine,outdoor,
+marine_likelihood,SPECIATE,Surface Coating; Marine Paints,outdoor,
+waste_likelihood,SPECIATE,Landfill,outdoor,
+waste_likelihood,SPECIATE,Wastewater Treatment,outdoor,
+waste_likelihood,SPECIATE,Composting,outdoor,
+waste_likelihood,SPECIATE,Incinerator,outdoor,
+commercial_likelihood,SPECIATE,Dry Cleaning,outdoor,
+commercial_likelihood,SPECIATE,Graphic Arts,outdoor,
+commercial_likelihood,SPECIATE,Misc. Non-industrial: Consumer and Commercial,outdoor,
+commercial_likelihood,SPECIATE,Cooking*,outdoor,
+outdoor_burning_likelihood,SPECIATE,Open Burning,outdoor,
+outdoor_burning_likelihood,SPECIATE,Biomass Burning; Wildfire*,outdoor,
+outdoor_burning_likelihood,SPECIATE,Biomass Burning; Prescribed Fire,outdoor,
+outdoor_burning_likelihood,SPECIATE,Biomass Burning; Agriculture,outdoor,
+outdoor_burning_likelihood,SPECIEUROPE,Biomass Burning; Open Burning,outdoor,

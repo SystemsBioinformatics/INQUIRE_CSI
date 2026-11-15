@@ -8,23 +8,23 @@ pesticides_household_likelihood,0.9,indoor products & activities,
 cleaning_products_likelihood,0.7,indoor products & activities,
 pets_likelihood,0.7,indoor products & activities,
 children_likelihood,0.6,indoor products & activities,
-occupancy_likelihood,0.3,indoor products & activities,
+occupancy_likelihood,0.3,indoor products & activities,"more occupants → more personal care, cooking, food handling"
 electronics_likelihood,0.6,indoor products & activities,
 floor_textile_likelihood,0.6,building & materials,
 floor_resilient_likelihood,0.6,building & materials,
 wood_surfaces_likelihood,0.4,building & materials,
-building_age_likelihood,0.5,building & materials,
+building_age_likelihood,0.5,building & materials,assumes higher = older building
 renovation_likelihood,0.7,building & materials,
 ventilation_likelihood,0.0,building & materials,"more air exchange = more outdoor & less indoor → not directional, not used"
 airport_likelihood,0.8,outdoor,
 traffic_likelihood,1.0,outdoor,
 industry_likelihood,0.8,outdoor,
-agriculture_likelihood,0.6,outdoor,
-agri_pesticides_likelihood,0.6,outdoor,
+agriculture_likelihood,0.6,outdoor,farms & crops around the household
+agri_pesticides_likelihood,0.6,outdoor,modelled agricultural pesticide use around the household
 pfas_likelihood,0.0,outdoor,no PFAS-specific source category in the source database → not used
 urban_likelihood,0.4,outdoor,
 green_likelihood,0.4,outdoor,
 marine_likelihood,0.4,outdoor,
 waste_likelihood,0.4,outdoor,
-commercial_likelihood,0.5,outdoor,
+commercial_likelihood,0.5,outdoor,"coffee bars/restaurants, laundries, print shops"
 outdoor_burning_likelihood,0.5,outdoor,
