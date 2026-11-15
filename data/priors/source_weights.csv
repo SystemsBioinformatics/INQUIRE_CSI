@@ -1,0 +1,7 @@
+source_origin,weight,rationale
+HOUSEHOLD_PRODUCTS,1.0,"own analytical data (see HH relation factor in ""Source prior helper"")"
+LIT_CONSUMER_PRODUCTS,0.8,analytical data from literature
+FOODB,0.7,measured food composition
+SPECIEUROPE,0.6,measured European source profiles
+SPECIATE,0.4,measured US source profiles
+CPDAT,0.2,manufacturer-declared ingredients etc. (not measured)

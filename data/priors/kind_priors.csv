@@ -1,0 +1,55 @@
+table,source_kind,prior,group,rationale
+CONS_PRODS,Fabric,0.9,,"textiles/upholstery: flame retardants, PFAS, dyes"
+CONS_PRODS,Furniture,0.9,,"foam/coatings: flame retardants, plasticizers"
+CONS_PRODS,Construction Materials,0.9,,"flooring, wall materials: phthalates, flame retardants"
+CONS_PRODS,Electronics,0.9,,OPFRs/BFRs from casings & circuit boards
+CONS_PRODS,Cleaning Product,0.9,,direct indoor application
+CONS_PRODS,Personal Care Products,0.9,,"fragrances, parabens, UV filters, siloxanes"
+CONS_PRODS,Consumer Product,0.8,,
+CONS_PRODS,Shampoo,0.8,,
+CONS_PRODS,Children's Products,0.8,,"toys, mats: plasticizers, flame retardants"
+CONS_PRODS,Solvent-based,0.8,,sprays/coatings used indoors
+CONS_PRODS,Recycled,0.8,,recycled plastics: legacy additives
+CONS_PRODS,Clothing,0.7,,
+CONS_PRODS,Plastic Product,0.7,,
+CONS_PRODS,Water-based,0.6,,
+CONS_PRODS,Virgin,0.6,,
+CONS_PRODS,Rubber Product,0.6,,
+CONS_PRODS,Kitchen,0.4,,
+CONS_PRODS,Unknown,0.4,,
+PUC,Formulation,1.0,,products applied/used in homes
+PUC,Article,0.8,,durable goods emitting SVOCs
+PUC,NoID,0.4,,consumer products without PUC assignment (mostly personal care/household)
+PUC,Unknown,0.2,,
+PUC,Occupation,0.1,,occupational/industrial use
+FOODB,Fats and oils,0.5,,"cooking fumes, spice dust"
+FOODB,Herbs and Spices,0.5,,"cooking fumes, spice dust"
+FOODB,Herbs and spices,0.5,,"cooking fumes, spice dust"
+FOODB,Coffee and coffee products,0.4,,
+FOODB,Teas,0.4,,
+FOODB,Cereals and cereal products,0.3,,
+FOODB,Animal foods,0.3,,
+FOODB,Baking goods,0.3,,
+FOODB,Dishes,0.3,,
+FOODB,Snack foods,0.3,,
+FOODB,Cocoa and cocoa products,0.3,,
+FOODB,Aquatic foods,0.2,,
+FOODB,Baby foods,0.2,,
+FOODB,Beverages,0.2,,
+FOODB,Confectioneries,0.2,,
+FOODB,Eggs,0.2,,
+FOODB,Fruits,0.2,,
+FOODB,Milk and milk products,0.2,,
+FOODB,Nuts,0.2,,
+FOODB,Pulses,0.2,,
+FOODB,Soy,0.2,,
+FOODB,Vegetables,0.2,,
+FOODB,Gourds,0.1,,
+FOODB,Unclassified,0.1,,
+SPECIATE,Dust,1.0,,resuspended road/soil dust is tracked in and becomes part of house dust
+SPECIATE,Combustion,0.8,,"PAHs etc. from traffic, stoves, cooking, smoking"
+SPECIATE,Volatilization,0.6,,
+SPECIATE,Atomization,0.6,,
+SPECIATE,Microbial,0.3,,
+SPECIATE,Chemical Reaction,0.1,,
+SPECIATE,Miscellaneous,0.3,,

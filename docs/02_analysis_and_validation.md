@@ -167,9 +167,9 @@ The validation notebook does **not** run stand-alone: it executes in the same ke
 | `USE_GEO_PRIORS` | Check input data | `True` | `True`: use `household_metadata_priors.csv`; `False`: no household information (geo multiplier = 1.0) | No household data available |
 | `GLOBAL_SEED` | Imports & setup | 1 | Seed for alpha tuning | Robustness check with other seeds |
 | `VALIDATION_SEED` | Separate random seed | `GLOBAL_SEED + 1000` | Seed for all validation blocks | Keep different from `GLOBAL_SEED` |
-| `SOURCE_WEIGHT` | Define source weights & priors | HHP 1.0, LIT 0.8, FooDB 0.7, SPECIEUROPE 0.6, SPECIATE 0.4, CPDat 0.2 | Reliability of each database | Other databases or judgment (report it) |
-| `*_KIND_PRIOR`, `*_CATEGORY_PRIOR`, `PRIOR_TABLES` | Define source weights & priors | see notebook | Plausibility of each kind/category as a dust source; default per origin | New categories; other matrices |
-| `MODULE_WEIGHT` | Geo metadata influence weights | 0–1 per module | Strength of each household module | New modules; switching a module off (0) |
+| `SOURCE_WEIGHT` (`data/priors/source_weights.csv`) | Define source weights & priors | HHP 1.0, LIT 0.8, FooDB 0.7, SPECIEUROPE 0.6, SPECIATE 0.4, CPDat 0.2 | Reliability of each database | Other databases or judgment (report it) |
+| `*_KIND_PRIOR`, `*_CATEGORY_PRIOR`, `PRIOR_TABLES` (`data/priors/prior_tables.csv`, `kind_priors.csv`, `category_priors.csv`) | Define source weights & priors | see CSV files | Plausibility of each kind/category as a dust source; default per origin | New categories; other matrices |
+| `MODULE_WEIGHT` (`data/priors/module_weights.csv`) | Geo metadata influence weights | 0–1 per module | Strength of each household module | New modules; switching a module off (0) |
 | `MODULE_SOURCE_MAP` | Map geo metadata modules to sources | see notebook | Which source categories each module affects | New source categories or modules |
 | `HH_SAME_HOUSEHOLD`, `HH_SAME_COUNTRY`, `HH_OTHER_COUNTRY` | Source prior helper | 2.0, 0.5, 0.2 | Household factor for own analyzed products | Other weighting of own products |
 | `BEAM_MAX_CANDIDATES` | Beam Search multiple-cover algorithm | `None` (all) | Cap on candidates scored per beam node | Speed-up for very large databases (e.g., 2000) |
@@ -213,7 +213,7 @@ The validation notebook does **not** run stand-alone: it executes in the same ke
 | `View v_… missing` / `Table … missing in …sqlite` | Database from another version of the pipeline | Re-run Part 1 |
 | `[geo_metadata_prior] … missing` / file not found | `USE_GEO_PRIORS = True` but no priors file in `<data_dir>/analysis_in/geo_metadata_outputs/` | Add the file ([household_priors.md](household_priors.md)) or set `USE_GEO_PRIORS = False` |
 | `v_sources_masked missing required columns` (or `v_sources_meta_standardized …`) | Database from an older pipeline version | Re-run Part 1 |
-| Warning: modules in file but not in `MODULE_WEIGHT` (or vice versa) | Priors file and Part 2 module lists differ | Add the module to `MODULE_WEIGHT` and `MODULE_SOURCE_MAP` (weight 0 to ignore it) |
+| Warning: modules in file but not in `MODULE_WEIGHT` (or vice versa) | Priors file and Part 2 module lists differ | Add the module to `module_weights.csv` and `MODULE_SOURCE_MAP` (weight 0 to ignore it) |
 | Warning: label does not fire | A label in `MODULE_SOURCE_MAP` matches no source | Check spelling against `analysis_out/lookups/source_categories_per_origin.csv` |
 | `NameError: best_alpha` / `PRIOR_STRENGTH` | Cells run out of order | Restart the kernel and run all cells from the top |
 | `KeyError` in *Build master validation summary* | A validation block was switched off | Run all validation blocks (`RUN_VALIDATION = True`) or skip validation entirely (`RUN_VALIDATION = False`) |

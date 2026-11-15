@@ -4,7 +4,7 @@ INQUIRE_CSI is a Python/JupyterLab pipeline that links organic compounds detecte
 
 It combines a master contaminant source database (MCSDB), built from six source databases, with a **weighted set-cover** optimization. For every sample it searches for the smallest, most plausible set of sources that together explain all compounds of the sample for which at least one source is known. Two kinds of prior knowledge (priors) can make some sources more plausible than others: information about the household (e.g., wood burning, smoking, traffic, agriculture around the home), and the household's own analyzed products.
 
-INQUIRE_CSI was developed within the INQUIRE project and first applied to ca. 200 household dust samples from 8 European countries. It can be applied to other environmental matrices whose compounds are identified by InChIKey, such as indoor air. The category priors, the links between household information and source categories, and the penalty weight (alpha) were designed and tuned for indoor dust. For other matrices they should be reviewed and alpha re-tuned (see [docs/method_and_limitations.md](docs/method_and_limitations.md)).
+INQUIRE_CSI was developed within the INQUIRE project and first applied to ca. 200 household dust samples from 8 European countries. It can be applied to other environmental matrices whose compounds are identified by InChIKey, such as indoor air. The category priors, the links between household information and source categories, and the penalty weight (alpha) were designed and tuned for indoor dust. The priors are stored as CSV files in `data/priors/`. For other matrices they should be reviewed and alpha re-tuned (see [docs/method_and_limitations.md](docs/method_and_limitations.md)).
 
 > **Important:** the results are an *attribution of compounds to plausible source categories*, not a quantitative source apportionment. Many compounds in a sample (about half in the INQUIRE dust data) have no source in the database; all shares refer to attributable compounds only.
 
@@ -54,6 +54,7 @@ INQUIRE_CSI/
 │   └── csi_db.py                helper for the Part 1 SQLite database (build, read, export, verify)
 ├── example_data/               synthetic example data for testing, mirrors the input folders of data/ (see example_data/README.md)
 ├── data/                       working folder (inputs in preprocessing_in/ and analysis_in/; outputs in preprocessing_out/, analysis_out/, visualization_out/); see data/README.md
+│   └── priors/                 source weights and priors (CSV, tracked in git; designed for indoor dust, adaptable to other matrices)
 └── docs/
     ├── installation.md                  software, environment, folder structure, reproducibility
     ├── input_data.md                    all input files, formats and mandatory columns
@@ -81,7 +82,7 @@ INQUIRE_CSI/
    - **Sample data:** use your own, or the synthetic test data from `example_data/` (see [data/README.md](data/README.md)).
    - **To test the pipeline first**, copy the folders `example_data/preprocessing_in/` and `example_data/analysis_in/` into `data/` instead: it contains synthetic sample data, household priors and small example versions of all source databases and of the mapping file (see [example_data/README.md](example_data/README.md)).
 3. **Start JupyterLab** from the repository folder: `jupyter lab`.
-4. **Check `config.yaml`** in the repository root: it sets the working folder (`data_dir`, default `data`) and the subfolder names for all three notebooks. The default works if you keep the repository structure. In Part 2, set `USE_GEO_PRIORS = False` if you have no household priors file.
+4. **Check `config.yaml`** in the repository root: it sets the working folder (`data_dir`, default `data`) and the subfolder names for all three notebooks. The default works if you keep the repository structure. The source weights and priors are read from `data/priors/` (setting `folders.priors`); to apply the method to another matrix, copy and edit these CSV files (see [data/README.md](data/README.md#source-weights-and-priors-priors)). In Part 2, set `USE_GEO_PRIORS = False` if you have no household priors file.
 5. **Run the notebooks in order** 1 → 2 → 3 (Part 3 is optional), each with *Kernel → Restart Kernel and Run All Cells…*, and look at the points listed under "Checks" in each part's documentation.
 
 ---

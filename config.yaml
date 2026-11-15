@@ -10,6 +10,7 @@ data_dir: data
 folders:
   preprocessing_in: preprocessing_in    # Pt1 input:  raw databases, sample data, lookups/source_class_mapping.xlsx
   preprocessing_out: preprocessing_out  # Pt1 output: read by Pt2
+  priors: priors                        # Pt2 input: source weights & priors (CSV files, stored in the repository)
   analysis_in: analysis_in              # Pt2 extra input: geo_metadata_outputs/household_metadata_priors.csv
   analysis_out: analysis_out            # Pt2 output: read by Pt3
   visualization_out: visualization_out  # Pt3 output: figures
