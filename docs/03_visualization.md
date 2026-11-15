@@ -89,7 +89,7 @@ About 12 minutes on the test laptop (INQUIRE reference run: 00:12:13); building 
 | Section | What to look for | Interpretation |
 |---|---|---|
 | 3 | Number of rows before/after keeping cover 1; "All samples kept" | Expected unless `DROP_LL_SAMPLES = True` |
-| 5 | Sample groups listed: only real groups | A code like `7S` means QC samples were analyzed → set `DROP_QC_COLUMNS = True` in Part 1 and re-run Parts 1–3 |
+| 5 | Sample groups listed: only real groups | A code like `7S` means QC samples were analyzed → set `qc_columns.drop: true` in `config.yaml` in Part 1 and re-run Parts 1–3 |
 | 6 | Number of samples = number of real samples | Otherwise QC columns or missing samples |
 | 7/8 | Number of categories retained (≥ 1%) | Very many categories → use a broader level (`source_class_domain`) or a higher threshold |
 | Figures | Percentages per sample group do **not** sum to 100% | Expected (non-exclusive attribution) |

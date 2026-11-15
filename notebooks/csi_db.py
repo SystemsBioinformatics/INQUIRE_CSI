@@ -98,7 +98,7 @@ def _sample_matrix(con) -> pd.DataFrame:
 
 
 def read_samples_standardized(con) -> pd.DataFrame:
-    """Same content as dust_standardized.csv."""
+    """Same content as samples_standardized.csv."""
     return _sample_matrix(con)
 
 
@@ -182,22 +182,22 @@ def build_database(prep_out_dir, sample_file, db_path=None, schema_file=SCHEMA_F
                 "masked_hash": _null(mk["masked_hash"]), "hh_household": _null(mk["hh_household"])}))
 
         # samples (long format)
-        dust = pd.read_csv(sample_file, low_memory=False, float_precision="round_trip")  # exact floats
+        samples = pd.read_csv(sample_file, low_memory=False, float_precision="round_trip")  # exact floats
         # Sample columns = all columns after "Concentration Type"; of the leading columns only
         # the 4 required metadata columns are kept (any extra leading columns are ignored)
-        missing = [c for c in SAMPLE_META_COLS if c not in dust.columns]
+        missing = [c for c in SAMPLE_META_COLS if c not in samples.columns]
         if missing:
             raise ValueError(f"Required columns missing in {sample_file}: {missing}")
-        start = list(dust.columns).index("Concentration Type") + 1
-        sample_cols = list(dust.columns[start:])
-        dust = dust[SAMPLE_META_COLS + sample_cols]
-        dust = aggregate_duplicate_inchikeys(dust, log)
+        start = list(samples.columns).index("Concentration Type") + 1
+        sample_cols = list(samples.columns[start:])
+        samples = samples[SAMPLE_META_COLS + sample_cols]
+        samples = aggregate_duplicate_inchikeys(samples, log)
         _append(con, "sample", pd.DataFrame({"sample_id": sample_cols, "position": range(len(sample_cols))}))
-        det = dust[SAMPLE_META_COLS].copy()
+        det = samples[SAMPLE_META_COLS].copy()
         det.columns = ["inchikey", "feature_name", "compound_class", "concentration_type"]
         det["position"] = range(len(det))
         _append(con, "detected_compound", det)
-        long = (dust[["inchikey"] + sample_cols]
+        long = (samples[["inchikey"] + sample_cols]
                 .melt(id_vars="inchikey", var_name="sample_id", value_name="concentration")
                 .dropna(subset=["concentration"]))
         _append(con, "sample_compound", long[["sample_id", "inchikey", "concentration"]])
@@ -217,15 +217,15 @@ def build_database(prep_out_dir, sample_file, db_path=None, schema_file=SCHEMA_F
     return db_path
 
 
-def aggregate_duplicate_inchikeys(dust, log=_log):
+def aggregate_duplicate_inchikeys(samples, log=_log):
     """Warn about rows of the sample table that share an InChIKey and merge them into one row
     (at the position of the first one): concentrations of the sample columns (all columns after
     "Concentration Type") are summed (a sample stays empty if all merged rows are empty), feature
     names are joined with MULTI_SEP, all other columns come from the first row. All columns are kept."""
-    dup = dust.loc[dust["inchikey"].notna() & dust["inchikey"].duplicated(keep=False)]
+    dup = samples.loc[samples["inchikey"].notna() & samples["inchikey"].duplicated(keep=False)]
     if dup.empty:
-        return dust
-    cols = list(dust.columns)
+        return samples
+    cols = list(samples.columns)
     sample_cols = cols[cols.index("Concentration Type") + 1:]
     names = dup.groupby("inchikey", sort=False)["Feature Name"].agg(lambda s: " | ".join(map(str, s)))
     msg = (f"{len(names)} InChIKey(s) occur in more than one row of the sample table. Rows with the "
@@ -233,8 +233,8 @@ def aggregate_duplicate_inchikeys(dust, log=_log):
            f"(\"{MULTI_SEP.strip()}\"):\n" + "\n".join(f"   {k}: {v}" for k, v in names.items()))
     warnings.warn(msg, UserWarning, stacklevel=3)
     log(" - WARNING: " + msg)
-    has_key = dust["inchikey"].notna()
-    keep, rest = dust[has_key], dust[~has_key]
+    has_key = samples["inchikey"].notna()
+    keep, rest = samples[has_key], samples[~has_key]
     grp = keep.groupby("inchikey", sort=False)
     other = [c for c in cols if c not in sample_cols and c not in ("inchikey", "Feature Name")]
     out = pd.concat([grp[other].first(),
@@ -258,7 +258,7 @@ def _export_frames(con):
     """name -> (DataFrame, na_rep) of everything that is exported."""
     frames = {v[2:]: (read_view(con, v), "") for v in _views(con)}
     frames["sample_universes"] = (read_sample_universes(con, na_value="NA"), "NA")
-    frames["dust_standardized"] = (_sample_matrix(con), "")
+    frames["samples_standardized"] = (_sample_matrix(con), "")
     return frames
 
 
@@ -295,7 +295,7 @@ def verify_against_csv(db_path, prep_out_dir, sample_file, log=_log) -> pd.DataF
     prep = Path(prep_out_dir)
     targets = {k: prep / v for k, v in LEGACY_CSV.items()}
     targets["sample_universes"] = prep / "masked_sources" / "sample_universes.csv"
-    targets["dust_standardized"] = Path(sample_file)
+    targets["samples_standardized"] = Path(sample_file)
     con = connect(db_path)
     try:
         frames = _export_frames(con)
@@ -313,7 +313,7 @@ def verify_against_csv(db_path, prep_out_dir, sample_file, log=_log) -> pd.DataF
         buf.seek(0)
         new = pd.read_csv(buf, dtype=str, keep_default_na=False)
         old = _read_str(path)
-        if name == "dust_standardized":  # the CSV may have extra leading columns; the database keeps 4 + samples
+        if name == "samples_standardized":  # the CSV may have extra leading columns; the database keeps 4 + samples
             cols = list(old.columns)
             old = old[SAMPLE_META_COLS + cols[cols.index("Concentration Type") + 1:]]
         if list(new.columns) != list(old.columns) or new.shape != old.shape:

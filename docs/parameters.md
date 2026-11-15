@@ -40,8 +40,8 @@ The notebooks derive `DATA_DIR` (resolved `data_dir`) from this file; the old ha
 | `FEATURE_NAME_PRIORITY` | same | CPDat, SPECIATE, SPECIEUROPE, FooDB, literature products, own household products | Prefer names from another database |
 | `MULTI_SEP` | same | `"; "` | Other separator for several values in one cell |
 | `GROUP_META_COLS` | Aggregate equivalent products/sources | kind, general category, harmonized label | Not recommended |
-| `dust_cols_drop` | Reshape sample data | `7S_CS_01`–`7S_CS_04`, `Blank_NIST` (example) | **Always**: your own blank/QC columns |
-| `DROP_QC_COLUMNS` | Reshape sample data | `True` | `False` only to inspect blanks |
+| `qc_columns` (`config.yaml`: `drop`, `names`, `prefixes`, `patterns`) | Reshape sample data | `Blank_NIST` (example) | **Always**: your own blank/QC columns |
+| `qc_columns.drop` (`config.yaml`) | Reshape sample data | `true` | `false` only to inspect blanks |
 | `REAGGREGATE_AFTER_MASKING` | Mask products/sources | `True` | Check only |
 | `EXPORT_TRACE_TABLES` | Working copies and ID suffixes | `True` | `False` skips the per-database traceability files (`databases_id_w_suffix/*.csv`, `databases_standardized/<database>_standardized.csv`, `cpdat_*_standardized.csv`); keep `True` for Zenodo traceability |
 | `EXPORT_EXCEL`, `VERIFY_AGAINST_CSV` | Build SQLite database | `True`, `True` | `False` to skip the Excel workbook or the check of the database against the CSV files (faster with large data) |

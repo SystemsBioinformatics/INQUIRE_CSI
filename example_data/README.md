@@ -12,7 +12,7 @@ Paths are relative to `example_data/preprocessing_in/` (the source databases are
 
 | File | Content |
 |---|---|
-| `Sample_Data.xlsx` | 500 compounds × 40 synthetic samples plus one blank column (`Blank_NIST`, listed in `dust_cols_drop` of Part 1). The compounds are real compounds detected in household dust in the INQUIRE project (InChIKey, name, class). About half of them (253) have at least one source in the example source databases below, and half have none, so both attributed and unattributed compounds occur, as in real samples. Presence/absence was generated at random from each compound's detection frequency, with random sample and sample-group effects. The concentrations are random numbers > 0 (column `Concentration Type` = "Randomly generated concentrations"). |
+| `Sample_Data.xlsx` | 500 compounds × 40 synthetic samples plus one blank column (`Blank_NIST`, listed under `qc_columns` in `config.yaml`). The compounds are real compounds detected in household dust in the INQUIRE project (InChIKey, name, class). About half of them (253) have at least one source in the example source databases below, and half have none, so both attributed and unattributed compounds occur, as in real samples. Presence/absence was generated at random from each compound's detection frequency, with random sample and sample-group effects. The concentrations are random numbers > 0 (column `Concentration Type` = "Randomly generated concentrations"). |
 | `analysis_in/geo_metadata_outputs/household_metadata_priors.csv` | Random household likelihoods (0.02–0.98, mid-rank) for the 29 modules, for 30 of the 32 synthetic sample keys (`household_id`). Two keys are left out on purpose, to test samples without priors. |
 
 ### Example source databases
@@ -42,7 +42,7 @@ Each database contains **60 sources** (products, foods or emission profiles) in 
 | Two products with identical compounds and PUC | CPDat 900001 and test product 900059 (and the real pair 1842/1843) | Merged in the first aggregation (log: "CPDAT: 61 → 59") |
 | The same compound twice in one food | Every synthetic FooDB food (second entry ending in ", free", lower content) | Only the entry with the highest content is kept (log: "Deleted 58 semi-duplicates") |
 | Non-specific aggregate profile | SPECIATE test profile 99999 "Overall Average" | Removed when SPECIATE is loaded |
-| Blank column | `Blank_NIST` in `Sample_Data.xlsx` | Removed with `DROP_QC_COLUMNS = True` |
+| Blank column | `Blank_NIST` in `Sample_Data.xlsx` | Removed with `qc_columns.drop: true` in `config.yaml` |
 | Samples without household priors | 2 of 32 sample keys | Listed in the log of Part 2; analyzed with geo multiplier 1.0 |
 
 ## Sample IDs
@@ -54,7 +54,7 @@ IDs follow the pattern `LLNN[_suffix]` used by the pipeline (`LL` = 2-letter sam
 - all three notebooks end to end, without downloading the full databases;
 - all six source databases, the source class mapping and the reporting levels in Part 3;
 - the InChIKey cleanup, the aggregation of identical sources, the FooDB duplicate removal and the masking in Part 1;
-- removal of blank columns (`DROP_QC_COLUMNS = True`);
+- removal of blank columns (`qc_columns.drop: true` in `config.yaml`);
 - household priors (`USE_GEO_PRIORS = True`), including samples without priors;
 - the preference for a sample's own analyzed products (household factor), including several samples per key;
 - figures with several sample groups.
@@ -62,11 +62,11 @@ IDs follow the pattern `LLNN[_suffix]` used by the pipeline (`LL` = 2-letter sam
 ## How to use
 
 1. Copy the two folders `example_data/preprocessing_in/` and `example_data/analysis_in/` (the README is not needed) into the working folder `data/`. If `data/` already contains the real databases, copy them into a second working folder instead and point `data_dir` in `config.yaml` to it.
-2. Run `INQUIRE_CSI_Pt1_Preprocessing`, `INQUIRE_CSI_Pt2_Analysis_and_Validation` and (optionally) `INQUIRE_CSI_Pt3_Visualization` as described in the main README, with `DROP_QC_COLUMNS = True` in Part 1.
+2. Run `INQUIRE_CSI_Pt1_Preprocessing`, `INQUIRE_CSI_Pt2_Analysis_and_Validation` and (optionally) `INQUIRE_CSI_Pt3_Visualization` as described in the main README, with `qc_columns.drop: true` in `config.yaml` in Part 1.
 3. Part 1 takes a few seconds, Part 2 a few minutes (most of it alpha tuning and validation), Part 3 about a minute.
 
 **NB!** The example source databases are far smaller than the real ones (~360 instead of ~258,000 sources). Alpha tuning, prior calibration and the validation metrics therefore give values that differ from the reference run ([docs/method_and_limitations.md](../docs/method_and_limitations.md)); they only show that the pipeline runs. Expected messages with the example data:
-- Part 1: `Dust dataset: DF 'dust_strip' not found → skipped` (harmless; the sample data are cleaned as "Full dust dataset");
+- Part 1: `Sample dataset: DF 'samples_strip' not found → skipped` (harmless; the sample data are cleaned as "Full sample dataset");
 - Part 2, *Check the geo mapping*: many labels of `MODULE_SOURCE_MAP` "do not fire" (status NOT FOUND), because the example databases contain only a few source categories;
 - Part 2, alpha tuning: the best alpha lies at the lower end of the grid (1000), because the small synthetic sources hardly overlap.
 

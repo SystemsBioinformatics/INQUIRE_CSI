@@ -17,3 +17,12 @@ folders:
 # Input file names (inside folders: preprocessing_in)
 files:
   sample_data: Sample_Data.xlsx         # Pt1 input: non-target screening results, one column per sample
+
+# Blank / QC columns in the sample data (Pt1). Adapt to your own sample data.
+# Only sample columns (the columns after "Concentration Type") are checked; identifier columns are never dropped.
+qc_columns:
+  drop: true                  # true = drop the matching columns; false = keep them (they are then analyzed as samples)
+  names:                      # exact column names
+    - Blank_NIST
+  prefixes: ["7S_CS"]         # drop every column starting with one of these, e.g. ["7S_CS", "FR_Field_Blank"]
+  patterns: ["(?i)blank"]     # regular expressions matched anywhere in the column name (here: case-insensitive "blank")
