@@ -1,0 +1,481 @@
+# Name keywords removed from ALL sources (mixtures, inorganics, elements, ...)
+# One term per line, matched case-insensitively; text after '#' is ignored.
+mica
+talc
+kerosine
+kerosene
+gasoline
+aluminum
+aluminium
+alumina
+barium
+beryl
+bismuth
+cadmium
+calcium
+cesium
+caesium
+cerium
+ceric
+chromium
+cobalt
+copper
+cupric
+cuprat
+cupferron
+dysprosium
+erbium
+europium
+gallium
+gadolin
+german
+gold
+hafnium
+holmium
+iron
+indium
+iridium
+lanthan
+lead
+lithium
+lutetium
+magnes
+mangan
+mercur
+molybd
+neodym
+nickel
+niobium
+osmium
+pallad
+praseodym
+platin
+rhodium
+rhenium
+rhenate
+radon
+radium
+ruthenium
+rubidium
+samarium
+scandium
+silver
+strontium
+titan
+thorium
+thallium
+thallic
+tantal
+tellur
+terbium
+tungsten
+tungstate
+thulium
+tin fluoride
+vanad
+uranium
+uranyl
+yttrium
+ytterbium
+zinc
+zircon
+diamond
+ammonium tetraborate
+ammonium hydrogen phosphate
+glycosides
+uprous oxide
+cryolite
+arsenate
+ferric
+emery
+ferrous ammonium sulfate
+ferrosilicon
+dibasic sodium phosphate
+disodium phosphate dihydrate
+disodium phosphate dodecahydrate
+monosodium phosphate
+sodium phosphate P 32
+trisodium phosphate
+ammonium hydrogen sodium phosphate tetrahydrate
+foscarnet trisodium
+fluorphlogopite
+fluoboric acid
+ferrous oxide
+ferrous sulfide
+ferrous chloride
+phosphate buffered saline
+dichloromethane
+diborane
+boric acid
+cristobalite
+tritium
+naphthalene d8
+deuterochloroform
+deuterium
+acid phosphate
+aloe vera
+air
+activated charcoal
+actinolite
+ammonium carbonate
+ammonium carbamate
+ammonium bisulfite
+ammonium bisulfate
+ammonium ferrous sulfate hexahydrate
+dichromate
+chromate
+ammonium phosphate
+ammonium perchlorate
+ammonium isothiocyanate
+ammonium iodate
+ammonium hydrogen difluoride
+ammonium hydrogen carbonate
+ammonium sulfite
+ammonium sulfide
+ammonium sulfamate
+ammonium sodium hydrogenorthophosphate
+argon
+antimony
+antigorite
+anhydrite
+andalusite
+anatase
+amorphous silica
+ammonium thiosulfate
+borax
+borat
+boran
+spodumene
+bauxite
+bakelite
+azanide
+aventurine
+attapulgite
+arsine
+arsenous
+arsenic
+carbene
+calcite
+cacodylic acid
+alkanes
+alkenes
+bromoform
+iodoform
+ftoroform
+boron
+boric
+carbon tetrafluoride
+carbon tetrachloride
+carbon monoxide
+carbon disulfide
+carbon dioxide
+carbon black
+chlorine
+charcoal
+cellulase
+cellulose
+carbonyl sulfide
+carbonic acid sodium salt
+carbonic acid disodium salt
+cornmint oil
+coal
+chrysotile
+chromite
+chromic
+chloromethane
+chlorite
+alloy
+plaster of paris
+syenite
+natural rubber
+mullite
+montmorillonite
+mineral spirits
+radical
+potassium phosphate
+potassium peroxide
+aluminum phosphate
+limnanthes alba
+lewisite
+lazurite
+langbeinite
+kyanite
+krypton
+kaolinite
+iodic acid
+illite
+yeast
+hydroxylamine sulfate
+hydroxylamine hydrochloride
+hydrotalcite
+hydrogen sulfide
+hydrogen selenide
+hydrogen peroxide
+hydrogen iodide
+hydrogen fluoride
+hydrogen cyanide
+hydrochloric acid
+hydrobromic acid
+huntite
+hematite
+helium
+hectorite
+gypsum
+graphite
+grape seed oil
+gram's iodine
+goethite
+fuming sulfuric acid
+periodic acid
+perchloric acid
+perboric acid
+pentasodium triphosphate
+ozone
+oxygen
+hydroxylapatite
+orange terpenes
+olivine
+nitrous oxide
+nitrogen dioxide
+nitric oxide
+nitric acid
+perlite
+zeolite
+xenon
+wollastonite
+vitis vinifera
+vermiculite
+stainless steel
+dolomite
+sodium stannate
+sodium phosphite
+sodium octaborate
+sodium peroxydicarbonate
+sodium monofluorophosphate
+sodium methanediphosphonate
+sulfur dioxide
+borate
+sodium cyanodithioimidocarbonate
+sodium arsenate
+sodium methanearsonate
+tetrasodium pyrophosphate
+terpenes
+superoxide
+starch
+stannous
+stannane
+sodium sulfide
+sodium sulfate
+sodium sulfanilate
+sodium silicate
+sodium pyrophosphate
+sodium potassium aluminum silicate
+sodium polyphosphate
+sodium polymetaphosphate
+sodium phosphinate
+sodium persulfate
+pertechnetate
+perrhenate
+peroxoborate
+sodium peroxide
+sodium permanganate
+sodium periodate
+sodium perchlorate
+perborate
+sodium oxide
+vanadate
+nitroprusside
+sodium nitrite
+sodium nitrate
+fullerite
+monohydrogen phosphate heptahydrate
+molybdate
+sodium metaphosphate
+metaborate
+sodium metabisulfite
+sodium magnesium silicate
+sodium iodide
+sodium iodate
+magnesate
+sodium hypochlorite
+sodium hydrogen sulfate
+sodium hydrogen difluoride
+sodium hydride
+sodium hexametaphosphate
+sodium hexafluorosilicate
+sodium formate
+sodium fluoride
+sodium ferrocyanide
+sodium dichromate
+sodium chromate
+sodium cyanide
+sodium cobaltinitrite
+sodium chlorite
+sodium chloride
+sodium chlorate
+sodium bisulfite
+sodium bisulfate
+sodium bicarbonate
+sodium azide
+sodium arsenite
+sodium aluminosilicate
+sodium aluminate
+potassium tungstate
+potassium tripolyphosphate
+potassium trifluorido
+potassium titanate
+potassium tin
+potassium thiocyanate
+potassium tetrafluoroborate
+potassium superoxide
+potassium sulfite
+potassium sulfate
+potassium pyrosulfate
+potassium pyrophosphate
+potassium polysulfide
+potassium persulfate
+potassium peroxymonosulfate
+potassium permanganate
+potassium periodate
+potassium perchlorate
+potassium perfluorooctanesulfonate
+potassium pentaborate tetrahydrate
+potassium oxide
+potassium nitrite
+potassium nitrate
+potassium metaphosphate
+potassium metaborate
+potassium metabisulfite
+potassium iodide
+potassium iodate
+potassium hydroxide
+potassium hydrogen monopersulfate
+potassium hydrogen diiodate
+potassium hydride
+potassium hexafluorophosphate
+potassium hexacyanoferrate
+potassium fluoride
+potassium ferricyanide
+potassium dichromate
+potassium bichromate
+potassium cyanide
+potassium chromate
+potassium chloride
+potassium chlorate
+potassium carbonate
+potassium bromide
+potassium bromate
+potassium borate
+potassium bisulfate
+potassium bicarbonate
+potassium arsenate
+phosphorus oxide
+phosphorus trifluoride
+phosphotungstic acid
+phosphorus tribromide
+phosphorus pentachloride
+phosphorus pentasulfide
+phosphorous trichloride
+phosphorous acid
+phosphoric trichloride
+phosphomolybdic acid
+metaphosphoric acid
+silica
+silyl
+siloxane
+silicon
+silicic acid
+silicate
+silan
+silicic
+selenium
+selenious
+selenic
+extract
+sapphire
+sand
+rose oil
+aluminosilicate
+diopside
+quartz
+pyrophyllite
+borane
+almandite and pyrope garnet
+aluplex
+americium 241
+ammonium cyanide
+amosite
+amylase
+azurite
+boehmite
+bovine insulin
+cerous chloride heptahydrate
+chlorous acid
+clinoptilolite
+collagens
+cyclic amp
+epoxy resin
+kinase
+lactoferrin
+lignin
+limonite
+ferrate
+ferrocene
+ferrocyanide
+ferroin
+ferrous gluconate
+ferrous lactate
+ferrous oxalate
+ginseng
+human chorionic gonadotropin
+human insulin
+hydrocarbon oils
+invert sugar
+iodine chloride
+iodine pentafluoride
+iodine pentoxide
+iodohippurate sodium
+15n acid solution
+nitrogen mustard hydrochloride
+nitrogen tetroxide
+nitrogen trifluoride
+pectin
+peroxidase
+phenoxy resin
+phosphorodithioic acid
+polyamide fibers
+53249257
+pyrite
+riebeckite
+saponins
+sepiolite
+smithsonite
+sodium bromate
+sodium bromide
+sodium selenate
+sodium selenite
+sodium sulfamate
+sodium thiocyanate
+sodium thiosulfate
+sodium trimetaphosphate
+sterols
+sulfurous acid
+sulfuryl chloride
+sulfuryl fluoride
+terpene resin
+tetraphenyl tin
+thulium oxide
+tungstic acid
+uraninite
+phytosterols
+tocopherols
+topaz
+tremolite
+tridymite
+triethyltin bromide
+triphosphoric acid
+phosphinic acid
+triphosphate
+lanthanum
+toximul 3406f
+pyrolyzed organic carbon

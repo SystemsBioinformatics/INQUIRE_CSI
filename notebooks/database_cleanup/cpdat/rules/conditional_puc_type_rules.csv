@@ -1,0 +1,46 @@
+puc_product_type,match_column,contains,new_puc_product_type
+fire extinguishing agent,puc_general_category,industrial,Mold Release Agent
+fire extinguishing agent,puc_general_category,special,Firefighting Agent
+treatment,puc_product_family,skin,Topical Skin Treatment
+treatment,puc_product_family,water,Water Treatment Chemical
+floor,product_title,coating,Floor Coating
+floor,product_title,finish,Floor Finish
+hair,puc_product_family,coloring,Hair Coloring
+hair,puc_product_family,styling,Hair Styling or Care
+aerosol,puc_product_family,air freshener,Air Freshener
+aerosol,puc_product_family,lubricant,Lubricant
+aerosol,puc_product_family,paint,Paint or Stain or Related Product
+aerosol,puc_product_family,deodorant,Deodorant
+aerosol,puc_product_family,insecticide,Insecticide
+aerosol,puc_product_family,corrosion inhibitor,Corrosion Inhibitor
+aerosol,puc_product_family,refrigerant,Refrigerant
+spray,product_title,air freshener,Air Freshener
+spray,product_title,deodorant,Deodorant
+spray,product_title,insect repellent,Insect Repellent
+spray,product_title,insecticide,Insecticide
+spray,product_title,professional use pesticides,Pesticide
+spray,product_title,sunscreen,Sunscreen
+deodorant,puc_product_family,air freshener,Air Freshener
+fluid,puc_product_family,hydraulic fluid,Hydraulic Fluid
+fluid,puc_product_family,vulcanizing fluid,Vulcanizing Fluid
+fluid,product_title,cutting fluid,Cutting Fluid
+gel,puc_product_family,air freshener,Air Freshener
+gel,puc_product_family,drain products,Drain Product
+gel,puc_product_family,after sun product,After Sun Product
+gel,puc_product_family,deodorant,Deodorant
+liquid,puc_product_family,air freshener,Air Freshener
+liquid,puc_product_family,drain products,Drain Product
+liquid,puc_product_family,herbicide,Herbicide
+liquid,puc_product_family,surface deicer,Deicer
+liquid,puc_product_family,insect repellent,Insect Repellent
+liquid,puc_product_family,corrosion inhibitor,Corrosion Inhibitor
+nail,product_title,nail enamel dryer,Nail Polish
+nail,product_title,nail no more,Nail Polish Remover
+cleaning product,puc_general_category,batteries,Battery Component
+vehicle,puc_product_family,dry cleaning chemicals,Dry Cleaning Chemical
+fluid,puc_product_family,metalworking fluid,Metalworking Fluid
+industrial,puc_product_family,industrial lubricants,Industrial Lubricant
+finish,product_title,wood,Wood Finish
+cable,product_title,clean,Cable Cleaner
+cable,product_title,lub,Lubricant
+cable,puc_product_family,industrial,Industrial Lubricant

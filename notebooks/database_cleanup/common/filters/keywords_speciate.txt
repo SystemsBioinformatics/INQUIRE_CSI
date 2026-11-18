@@ -1,0 +1,2 @@
+# Name keywords removed from SPECIATE only (matched literally, not as regex)
+# One term per line, matched case-insensitively; text after '#' is ignored.

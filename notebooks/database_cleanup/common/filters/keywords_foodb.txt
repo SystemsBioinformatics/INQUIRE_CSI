@@ -1,0 +1,90 @@
+# Name keywords removed from FooDB only (matched literally, not as regex)
+# One term per line, matched case-insensitively; text after '#' is ignored.
+trona
+ferrous ascorbate
+trisodium nitrilotriacetate
+ferrlecit
+nitrogenase
+hydroxytriphenylstannane
+nitrogen oxides
+arsinous
+arsonate
+arsinate
+arsonite
+hexasodium metaphosphate (p6o186(-))
+potassium triphosphate (k5(p3o10))
+activated carbon
+trimethylselenonium
+seleno
+selenide
+selenate
+sodium aluminium phosphate
+sodium sulfate decahydrate
+sodium silicate (na2sio3)
+sodium sesquicarbonate
+sodium phosphate (na3po4)
+sodium phosphate (na(h2po4))
+sodium nitrate (nano3)
+sodium methyl sulfate
+sodium magnesium aluminosilicate
+sodium iron versenate
+sodium hydroxide (naoh)
+sodium hydrogen sulfite
+sodium hydrogen carbonate
+sodium fluoride (naf)
+sodium ferulate
+sodium ferricitropyrophosphate
+sodium dithionite (na2s2o4)
+sodium disulfite
+sodium diphosphate (na4(p2o7))
+sodium copper chlorophyllin
+sodium chloride (nacl)
+sodium carbonate
+sodium calcium edetate
+sodium calcium aluminosilicate, hydrated
+sodium borohydride
+sodium aluminum silicate
+sodium aluminium oxide (naalo2)
+sodium alum
+potassium tetraborate
+potassium sulfite (k2so3)
+potassium sulfate (k2so4)
+potassium sorbate
+potassium salts of fatty acids
+potassium propionate
+potassium phosphinate
+potassium phosphate (k3po4)
+potassium phosphate (k(h2po4))
+potassium persulfate (k2s2o8)
+potassium palmitate
+potassium nitrite (kno2)
+potassium nitrate (kno3)
+potassium iodate(v) (kio3)
+potassium hypophosphate
+potassium hydroxide (koh)
+potassium hydrogen sulfate (khso4)
+potassium hydrogen carbonate
+potassium disulfite
+potassium diphosphate (k4(p2o7))
+potassium carbonate (k2co3)
+potassium bromide (kbr)
+potassium bromate(v) (kbro3)
+potassium bisulfite
+potassium acid pyrophosphate
+polymeric potassium metaphosphate
+disodium tetraborate
+disodium sulfide
+disodium pyrophosphate
+disodium phosphate
+dicalcium orthosilicate
+potassium ferrocyanide
+diammonium sulfite
+diammonium sulfide
+diammonium hydrogen phosphate ((nh4)2hpo4)
+ammonium sulfate
+ammonium peroxydisulfate
+ammonium hydroxide
+ammonium dihydrogenphosphate
+ammonium chloride ((nh4)cl)
+ammonium bicarbonate
+ammonium alum

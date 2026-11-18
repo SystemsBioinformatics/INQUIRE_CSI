@@ -1,0 +1,29 @@
+# Names containing any of these (substring, case-insensitive) are protected from keyword removal
+# One term per line, matched case-insensitively; text after '#' is ignored.
+Sandoricin
+Sandosapogenol
+Sandosaponin A
+Sandosaponin B
+Silandrin
+Sandaracopimaradiene
+Calcitetrol
+Germanicol
+selenomethionine
+Selenocystathionine
+2-Amino-4-selenobutanoic acid
+alpha-Irone
+# Nucleotide triphosphates (kept although 'triphosphate' is a common keyword)
+adenosine triphosphate
+adenosine 5'-triphosphate
+guanosine triphosphate
+guanosine 5'-(tetrahydrogen triphosphate)
+cytidine triphosphate
+uridine triphosphate
+uridine 5'-triphosphate
+inosine triphosphate
+xanthosine 5'-triphosphate
+thiamine triphosphate
+thiamine) triphosphate
+nucleoside triphosphate
+riboside triphosphate
+neopterin triphosphate

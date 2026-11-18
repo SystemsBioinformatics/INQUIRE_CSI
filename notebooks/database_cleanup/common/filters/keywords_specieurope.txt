@@ -1,0 +1,11 @@
+# Name keywords removed from SPECIEUROPE only (matched literally, not as regex)
+# One term per line, matched case-insensitively; text after '#' is ignored.
+chloride ion
+hydrated sulfate
+organic carbon
+pah
+phosphorus
+ree
+substances
+sulfur
+unknown
